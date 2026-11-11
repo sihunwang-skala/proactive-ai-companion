@@ -1,0 +1,31 @@
+{
+ "n": 40,
+ "question_detection": {
+  "precision": 0.923,
+  "recall": 1.0,
+  "f1": 0.96
+ },
+ "error_detection": {
+  "precision": 1.0,
+  "recall": 1.0,
+  "f1": 1.0,
+  "false_positive_rate": 0.0
+ },
+ "interject_mode": {
+  "delivered_on_true_errors": 4,
+  "unnecessary_interruptions": 0,
+  "unnecessary_interruption_rate": 0.0
+ },
+ "detector_latency_ms": {
+  "p50": 0.044,
+  "p95": 0.164
+ },
+ "misclassified": [
+  [
+   "tag_question_ko",
+   "이 방식이 더 낫죠?",
+   "q=True",
+   "err=False"
+  ]
+ ]
+}

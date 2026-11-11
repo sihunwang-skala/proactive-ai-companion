@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Proactive AI Companion</title>
+<style>
+:root{--bg:#f6f7f9;--surface:#fff;--surface2:#f0f2f5;--text:#14181f;--muted:#5d6675;--line:#e2e6ec;--accent:#3b5bdb;--accent-ink:#fff;
+--crit:#c92a2a;--crit-bg:#fff0f0;--imp:#d9480f;--imp-bg:#fff4ec;--sug:#1971c2;--sug-bg:#edf5ff;--pas:#6b7280;--pas-bg:#f1f3f5;--ok:#2b8a3e;
+--r:12px;--s1:4px;--s2:8px;--s3:12px;--s4:16px;--s5:24px;--font:-apple-system,BlinkMacSystemFont,"Inter","Segoe UI","Apple SD Gothic Neo","Noto Sans KR",sans-serif;--mono:ui-monospace,SFMono-Regular,Menlo,monospace}
+[data-theme=dark]{--bg:#0f1218;--surface:#171b23;--surface2:#1f2430;--text:#e7eaf0;--muted:#9aa3b2;--line:#2a303c;--accent:#7c93ff;--accent-ink:#0b0e14;
+--crit:#ff8787;--crit-bg:#2b1717;--imp:#ffa94d;--imp-bg:#2b2014;--sug:#74c0fc;--sug-bg:#141f2b;--pas:#9aa3b2;--pas-bg:#1c212b;--ok:#69db7c}
+*{box-sizing:border-box}html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--text);font:14px/1.5 var(--font);-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:6px 12px;min-height:34px}
+button:hover{background:var(--surface2)}button.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);font-weight:600}
+button.danger{color:var(--crit)}button:disabled{opacity:.45;cursor:not-allowed}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+input[type=text],textarea,select{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:7px 10px;width:100%}
+.app{display:grid;grid-template-rows:auto 1fr;height:100%}
+header{display:flex;gap:var(--s3);align-items:center;padding:var(--s3) var(--s4);background:var(--surface);border-bottom:1px solid var(--line);flex-wrap:wrap}
+h1{font-size:15px;margin:0;font-weight:650;letter-spacing:-.01em}
+.rec{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:4px 10px;border-radius:999px;background:var(--pas-bg);color:var(--muted)}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--pas)}
+.rec.on{background:var(--crit-bg);color:var(--crit)}.rec.on .dot{background:var(--crit);animation:p 1.4s infinite}
+@keyframes p{50%{opacity:.3}}@media(prefers-reduced-motion:reduce){.rec.on .dot{animation:none}}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:9px;overflow:hidden}
+.seg button{border:0;border-radius:0;background:transparent}.seg button[aria-pressed=true]{background:var(--accent);color:var(--accent-ink);font-weight:600}
+.sp{flex:1}
+main{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:var(--s4);padding:var(--s4);min-height:0}
+@media(max-width:860px){main{grid-template-columns:1fr;overflow:auto}}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);display:flex;flex-direction:column;min-height:0;min-width:0}
+.panel>h2{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:0;padding:var(--s3) var(--s4);border-bottom:1px solid var(--line);display:flex;gap:var(--s2);align-items:center}
+.scroll{overflow:auto;padding:var(--s3) var(--s4);flex:1;min-height:160px}
+.u{padding:6px 0;display:grid;grid-template-columns:44px 1fr;gap:8px}.u time{font:12px var(--mono);color:var(--muted);padding-top:2px}
+.u b{font-weight:600}.u .tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:2px}
+.tag{font-size:11px;padding:1px 7px;border-radius:999px;background:var(--surface2);color:var(--muted)}
+.composer{display:flex;gap:var(--s2);padding:var(--s3) var(--s4);border-top:1px solid var(--line);flex-wrap:wrap}
+.composer input[type=text]{flex:1;min-width:140px}.composer .spk{width:110px;flex:none}
+.card{border:1px solid var(--line);border-left-width:4px;border-radius:10px;padding:var(--s3);margin-bottom:var(--s3);background:var(--surface)}
+.card.critical{border-left-color:var(--crit);background:var(--crit-bg)}.card.important{border-left-color:var(--imp);background:var(--imp-bg)}
+.card.suggestion{border-left-color:var(--sug);background:var(--sug-bg)}.card.passive{border-left-color:var(--pas);background:var(--pas-bg)}
+.card.dismissed{opacity:.5}
+.card h3{margin:0 0 2px;font-size:13.5px}.card p{margin:4px 0;white-space:pre-wrap}.meta{font-size:12px;color:var(--muted)}
+.card .act{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}.card .act button{min-height:28px;padding:2px 10px;font-size:12px}
+.badge{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;margin-right:6px}
+.critical .badge{color:var(--crit)}.important .badge{color:var(--imp)}.suggestion .badge{color:var(--sug)}.passive .badge{color:var(--pas)}
+.ev{font-size:12px;border-top:1px dashed var(--line);margin-top:6px;padding-top:6px;color:var(--muted)}
+.tabs{display:flex;gap:2px;padding:0 var(--s3);border-bottom:1px solid var(--line);overflow-x:auto}
+.tabs button{border:0;border-bottom:2px solid transparent;border-radius:0;background:none;color:var(--muted)}
+.tabs button[aria-selected=true]{color:var(--text);border-bottom-color:var(--accent);font-weight:600}
+.empty{color:var(--muted);text-align:center;padding:var(--s5)}
+dialog{border:1px solid var(--line);border-radius:var(--r);background:var(--surface);color:var(--text);max-width:520px;width:calc(100% - 32px);padding:var(--s5)}
+dialog::backdrop{background:rgba(0,0,0,.5)}label.row{display:flex;gap:8px;align-items:flex-start;margin:10px 0}label.row input{margin-top:4px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:var(--s3)}.field{margin-bottom:var(--s3)}.field label{display:block;font-size:12px;color:var(--muted);margin-bottom:3px}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:4px 14px}.kv dt{color:var(--muted)}.kv dd{margin:0}
+.note{font-size:12px;color:var(--muted);background:var(--surface2);padding:8px 10px;border-radius:8px}
+ul.clean{margin:4px 0 12px;padding-left:18px}h4{margin:14px 0 2px;font-size:13px}
+.toast{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:var(--text);color:var(--bg);padding:8px 14px;border-radius:8px;z-index:9;display:none}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+  <h1>Proactive AI Companion</h1>
+  <span class="rec" id="rec" role="status" aria-live="polite"><span class="dot"></span><span id="recText">Not listening</span></span>
+  <div class="seg" role="group" aria-label="Intervention mode" id="modes">
+    <button data-mode="hold" aria-pressed="true" title="AI drafts suggestions; you approve">Hold</button>
+    <button data-mode="called_on" aria-pressed="false" title="AI answers only when you call (Ctrl/⌘+K)">Called On</button>
+    <button data-mode="interject" aria-pressed="false" title="AI may interject when confident and valuable">Interject</button>
+  </div>
+  <span class="sp"></span>
+  <button id="btnCall" disabled title="Ctrl/⌘+K">Ask AI</button>
+  <button id="btnStart" class="primary">Start session</button>
+  <button id="btnPause" disabled>Pause</button>
+  <button id="btnStop" class="danger" disabled>Stop</button>
+  <button id="btnTheme" aria-label="Toggle theme">◐</button>
+</header>
+<main>
+  <section class="panel" aria-label="Transcript">
+    <h2>Live transcript <span class="sp"></span><span class="meta" id="sttState"></span></h2>
+    <div class="scroll" id="transcript"><div class="empty">Start a session, then speak (browser speech recognition) or type below.</div></div>
+    <form class="composer" id="composer">
+      <input class="spk" type="text" id="speaker" placeholder="Speaker" aria-label="Speaker label" value="Me">
+      <input type="text" id="utt" placeholder="Type an utterance (simulates speech)…" aria-label="Utterance" autocomplete="off">
+      <button class="primary" id="btnSend" disabled>Send</button>
+      <button type="button" id="btnMic" disabled>🎙 Mic</button>
+    </form>
+  </section>
+  <section class="panel" aria-label="Companion">
+    <div class="tabs" role="tablist" id="tabs">
+      <button role="tab" aria-selected="true" data-tab="feed">Suggestions</button>
+      <button role="tab" aria-selected="false" data-tab="notes">Notes</button>
+      <button role="tab" aria-selected="false" data-tab="evidence">Knowledge</button>
+      <button role="tab" aria-selected="false" data-tab="history">History</button>
+      <button role="tab" aria-selected="false" data-tab="cost">Cost</button>
+      <button role="tab" aria-selected="false" data-tab="settings">Settings</button>
+    </div>
+    <div class="scroll" id="pane"></div>
+  </section>
+</main>
+</div>
+
+<dialog id="consent">
+  <form method="dialog" id="consentForm">
+    <h2 style="margin-top:0">Start a session</h2>
+    <div class="field"><label for="title">Title</label><input type="text" id="title" placeholder="e.g. Weekly product sync"></div>
+    <div class="grid2">
+      <div class="field"><label for="profile">Profile</label><select id="profile"><option value="meeting">Meeting</option><option value="learning">Learning</option><option value="work">Work</option></select></div>
+      <div class="field"><label for="lang">Speech language</label><select id="lang"><option value="en-US">English</option><option value="ko-KR">한국어</option></select></div>
+    </div>
+    <label class="row"><input type="checkbox" id="cConsent"><span>I understand this session will capture and transcribe speech, and that <b>everyone being recorded has been informed</b> and, where the law requires, has consented.</span></label>
+    <label class="row"><input type="checkbox" id="cAudio"><span>Also save an audio recording on this computer (optional).</span></label>
+    <p class="note">Speech-to-text uses your browser's Web Speech API. In Chrome and Safari the browser vendor may process audio in the cloud. Companion itself keeps data in a local SQLite file and sends nothing to any LLM unless you configured a provider on the server.</p>
+    <div style="display:flex;gap:8px;justify-content:flex-end"><button value="cancel">Cancel</button><button class="primary" id="cGo" value="go" disabled>Start listening</button></div>
+  </form>
+</dialog>
+<div class="toast" id="toast" role="alert"></div>
+
+<script>
+const $=s=>document.querySelector(s), api=async(p,o={})=>{const r=await fetch('/api'+p,{headers:{'content-type':'application/json'},...o,body:o.body&&typeof o.body!=='string'&&!(o.body instanceof Blob)?JSON.stringify(o.body):o.body});
+  if(!r.ok){let d='';try{d=(await r.json()).detail}catch{};throw new Error(d||r.statusText)} return r.status===204?null:(r.headers.get('content-type')||'').includes('json')?r.json():r.text()};
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const mmss=ms=>{const s=Math.max(0,Math.floor(ms/1000));return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')};
+const toast=m=>{const t=$('#toast');t.textContent=m;t.style.display='block';clearTimeout(toast.h);toast.h=setTimeout(()=>t.style.display='none',3500)};
+const S={sid:null,status:'idle',mode:'hold',tab:'feed',utts:[],ivs:[],lang:'en-US',recog:null,mr:null,chunks:[],settings:{}};
+try{const th=localStorage.getItem('theme');if(th)document.documentElement.dataset.theme=th}catch{}
+$('#btnTheme').onclick=()=>{const t=document.documentElement.dataset.theme==='dark'?'light':'dark';document.documentElement.dataset.theme=t;try{localStorage.setItem('theme',t)}catch{}};
+
+function renderStatus(){
+  const on=S.status==='active';$('#rec').className='rec'+(on?' on':'');
+  $('#recText').textContent=on?'Listening — session active':S.status==='paused'?'Paused':'Not listening';
+  $('#btnStart').disabled=S.status==='active'||S.status==='paused';
+  $('#btnPause').disabled=!(S.status==='active'||S.status==='paused');$('#btnPause').textContent=S.status==='paused'?'Resume':'Pause';
+  $('#btnStop').disabled=!(S.status==='active'||S.status==='paused');
+  $('#btnSend').disabled=$('#btnCall').disabled=!on;$('#btnMic').disabled=!on||!(window.SpeechRecognition||window.webkitSpeechRecognition);
+  if(!(window.SpeechRecognition||window.webkitSpeechRecognition))$('#sttState').textContent='Browser STT unavailable — typed input only';
+  document.querySelectorAll('#modes button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.mode===S.mode));
+}
+function renderTranscript(){
+  const el=$('#transcript');
+  if(!S.utts.length){el.innerHTML='<div class="empty">No utterances yet.</div>';return}
+  el.innerHTML=S.utts.map(u=>`<div class="u" id="u-${u.id}"><time>${mmss(u.ts_ms)}</time><div><b>${esc(u.speaker||'Speaker')}</b> ${esc(u.text)}<div class="tags">${(u.tags||[]).map(t=>`<span class="tag">${esc(t)}</span>`).join('')}</div></div></div>`).join('');
+  el.scrollTop=el.scrollHeight;
+}
+const LABEL={critical:'Critical',important:'Important',suggestion:'Suggestion',passive:'Noted'};
+function card(iv){
+  const ev=(iv.evidence||[]).map(e=>`<div class="ev">${esc(e.kind)}${e.source?': '+esc(e.source):''}${e.quote?' — “'+esc(e.quote)+'”':''}${e.verified===false?' · <b>unverified, model-generated</b>':''}</div>`).join('');
+  const u=S.utts.find(x=>x.id===iv.utterance_id);
+  const acts=iv.status==='pending'?`<button class="primary" data-a="approve" data-id="${iv.id}">Deliver</button><button data-a="save" data-id="${iv.id}">Save</button><button data-a="dismiss" data-id="${iv.id}">Dismiss</button>`:
+    iv.status==='dismissed'?'':`<button data-f="useful" data-id="${iv.id}" ${iv.feedback==='useful'?'disabled':''}>👍 Useful</button><button data-f="not_useful" data-id="${iv.id}" ${iv.feedback==='not_useful'?'disabled':''}>👎 Not useful</button>${iv.status!=='saved'?`<button data-a="save" data-id="${iv.id}">Save</button>`:''}`;
+  return `<article class="card ${iv.priority} ${iv.status}"><h3><span class="badge">${LABEL[iv.priority]}</span>${esc(iv.title)}</h3><p>${esc(iv.body)}</p>${ev}
+  <div class="meta">${u?`at ${mmss(u.ts_ms)} · `:''}confidence ${Math.round((iv.confidence||0)*100)}% · ${esc(iv.status)}${iv.trigger==='called'?' · you asked':''}</div><div class="act">${acts}</div></article>`;
+}
+async function renderPane(){
+  const p=$('#pane');document.querySelectorAll('#tabs button').forEach(b=>b.setAttribute('aria-selected',b.dataset.tab===S.tab));
+  if(S.tab==='feed'){
+    const ivs=[...S.ivs].reverse();
+    p.innerHTML=ivs.length?ivs.map(card).join(''):'<div class="empty">Nothing to suggest yet. The companion stays quiet until something is worth your attention.</div>';
+  }else if(S.tab==='notes'){
+    if(!S.sid){p.innerHTML='<div class="empty">Start or open a session.</div>';return}
+    const s=await api(`/sessions/${S.sid}/summary`);
+    const L=(t,a,f)=>`<h4>${t}</h4>${a.length?'<ul class="clean">'+a.map(f).join('')+'</ul>':'<div class="meta">None</div>'}`;
+    p.innerHTML=`<div class="note">${esc(s.executive_summary)} <i>(extractive, generated locally)</i></div>`+
+      L('Decisions',s.decisions,d=>`<li>[${d.ts}] ${esc(d.text)}</li>`)+
+      L('Action items',s.action_items,a=>`<li>[${a.ts}] ${esc(a.text)} — owner: <b>${esc(a.owner||'not stated')}</b>, deadline: <b>${esc(a.deadline||'not stated')}</b></li>`)+
+      L('Unresolved questions',s.unresolved_questions,q=>`<li>[${q.ts}] ${esc(q.text)}</li>`)+
+      L('Contradictions',s.contradictions,c=>`<li>[${c.ts}] ${esc(c.subject)}: “${esc(c.earlier)}” → “${esc(c.now)}”</li>`)+
+      L('Possible errors',s.possible_errors,r=>`<li>[${r.ts}] <i>${esc(r.verdict)}</i> ${esc(r.text)}</li>`)+
+      L('Follow-ups',s.follow_ups,f=>`<li>${esc(f)}</li>`)+
+      `<div style="display:flex;gap:8px;margin-top:12px"><a href="/api/sessions/${S.sid}/export?format=md"><button>Export Markdown</button></a><a href="/api/sessions/${S.sid}/export?format=json"><button>Export JSON</button></a></div>`;
+  }else if(S.tab==='evidence'){
+    const d=await api('/documents'+(S.sid?`?session_id=${S.sid}`:''));
+    p.innerHTML=`<div class="note">Documents you add here are used for retrieval, answers and numeric fact-checks. Nothing leaves your machine unless a cloud LLM provider is configured.</div>
+    <div class="field" style="margin-top:12px"><label for="dn">Name</label><input type="text" id="dn" placeholder="notes.md"></div>
+    <div class="field"><label for="dt">Text</label><textarea id="dt" rows="6"></textarea></div><button class="primary" id="dadd">Add to knowledge base${S.sid?' (this session)':' (global)'}</button>
+    <h4>Documents</h4>${d.length?'<ul class="clean">'+d.map(x=>`<li>${esc(x.name)}</li>`).join('')+'</ul>':'<div class="meta">None yet</div>'}`;
+    $('#dadd').onclick=async()=>{try{await api('/documents',{method:'POST',body:{name:$('#dn').value||'untitled',text:$('#dt').value,session_id:S.sid}});renderPane()}catch(e){toast(e.message)}};
+  }else if(S.tab==='history'){
+    p.innerHTML=`<input type="text" id="hq" placeholder="Search sessions and transcripts…" aria-label="Search"><div id="hl" style="margin-top:10px"></div>`;
+    const load=async()=>{const l=await api('/sessions'+($('#hq').value?`?q=${encodeURIComponent($('#hq').value)}`:''));
+      $('#hl').innerHTML=l.length?l.map(s=>`<div class="card passive"><h3>${esc(s.title)}</h3><div class="meta">${new Date(s.started_at*1000).toLocaleString()} · ${s.profile} · ${s.status}</div>
+      <div class="act"><button data-open="${s.id}">Open</button><button data-del="${s.id}" class="danger">Delete</button></div></div>`).join(''):'<div class="empty">No sessions</div>'};
+    $('#hq').oninput=load;load();
+  }else if(S.tab==='cost'){
+    if(!S.sid){p.innerHTML='<div class="empty">Start or open a session.</div>';return}
+    const [c,m]=await Promise.all([api(`/sessions/${S.sid}/cost`),api(`/sessions/${S.sid}/metrics`)]);
+    p.innerHTML=`<dl class="kv"><dt>Processing</dt><dd>${esc(c.processing)}</dd><dt>Cloud LLM calls</dt><dd>${c.cloud_llm_calls}</dd><dt>Tokens in / out</dt><dd>${c.tokens_in} / ${c.tokens_out}</dd>
+    <dt>LLM cost (estimate)</dt><dd>${c.estimated_cost_usd==null?'—':'$'+c.estimated_cost_usd}</dd><dt>STT cost</dt><dd>$0 (browser)</dd><dt>Local events</dt><dd>${c.local_events_processed}</dd>
+    <dt>Server latency p50 / p95</dt><dd>${m.server_processing_ms_p50??'—'} / ${m.server_processing_ms_p95??'—'} ms</dd><dt>Dismissed</dt><dd>${m.dismissed}/${m.interventions}</dd><dt>Useful / not useful</dt><dd>${m.useful} / ${m.not_useful}</dd></dl>
+    <p class="note">${esc(c.cost_note)}<br>${esc(c.stt_note)}<br>${esc(m.note)}</p>`;
+  }else if(S.tab==='settings'){
+    const s=S.settings,n=(k,l,step=0.05)=>`<div class="field"><label>${l}</label><input type="number" step="${step}" data-s="${k}" value="${s[k]??''}"></div>`;
+    const ck=(k,l)=>`<label class="row"><input type="checkbox" data-sc="${k}" ${s[k]?'checked':''}><span>${l}</span></label>`;
+    p.innerHTML=(S.sid?'':'<div class="note">Start a session to edit its settings.</div>')+`<div class="grid2">${n('interject_threshold','Interject score threshold')}${n('confidence_threshold','Confidence threshold')}${n('cooldown_sec','Cooldown (s)',1)}${n('max_interruptions','Max interruptions',1)}</div>
+    ${ck('dnd','Do not disturb (cards only, never interject)')}${ck('socratic','Socratic mode (hints instead of answers)')}${ck('voice','Speak delivered suggestions aloud (OS text-to-speech)')}
+    <button class="primary" id="ssave" ${S.sid?'':'disabled'}>Apply</button><p class="note" style="margin-top:12px">Shortcuts: Ctrl/⌘+K ask AI · Ctrl/⌘+Enter send · Ctrl/⌘+P pause.</p>`;
+    $('#ssave').onclick=async()=>{const o={};document.querySelectorAll('[data-s]').forEach(i=>o[i.dataset.s]=Number(i.value));document.querySelectorAll('[data-sc]').forEach(i=>o[i.dataset.sc]=i.checked);
+      const r=await api(`/sessions/${S.sid}/settings`,{method:'PATCH',body:{settings:o}});S.settings=r.settings;toast('Settings applied')};
+  }
+}
+$('#tabs').onclick=e=>{const b=e.target.closest('button');if(b){S.tab=b.dataset.tab;renderPane()}};
+$('#pane').onclick=async e=>{const b=e.target.closest('button');if(!b)return;
+  try{
+    if(b.dataset.a||b.dataset.f){const r=await api(`/interventions/${b.dataset.id}/act`,{method:'POST',body:{action:b.dataset.a,feedback:b.dataset.f}});
+      S.ivs=S.ivs.map(x=>x.id===r.id?r:x);if(b.dataset.a==='approve')deliver(r);renderPane()}
+    if(b.dataset.open)openSession(b.dataset.open);
+    if(b.dataset.del&&confirm('Permanently delete this session, transcript and audio?')){await api('/sessions/'+b.dataset.del,{method:'DELETE'});if(S.sid===b.dataset.del)resetUI();renderPane()}
+  }catch(err){toast(err.message)}};
+function deliver(iv){if(S.settings.voice&&'speechSynthesis'in window){const u=new SpeechSynthesisUtterance(iv.body);u.lang=S.lang;speechSynthesis.speak(u)}}
+function resetUI(){S.sid=null;S.status='idle';S.utts=[];S.ivs=[];renderStatus();renderTranscript()}
+
+async function openSession(id){const d=await api('/sessions/'+id);S.sid=id;S.status=d.session.status;S.mode=d.session.mode;S.settings=d.session.settings;S.utts=d.utterances;S.ivs=d.interventions;S.tab='feed';renderStatus();renderTranscript();renderPane()}
+$('#btnStart').onclick=()=>$('#consent').showModal();
+$('#cConsent').onchange=e=>$('#cGo').disabled=!e.target.checked;
+$('#consentForm').onsubmit=async e=>{if(e.submitter?.value!=='go')return;
+  try{const s=await api('/sessions',{method:'POST',body:{title:$('#title').value,profile:$('#profile').value,mode:S.mode,record_audio:$('#cAudio').checked,
+    consent:{recording_consent_confirmed:true,participants_notified:true,source:'ui'}}});
+    S.lang=$('#lang').value;S.sid=s.id;S.status='active';S.settings=s.settings;S.utts=[];S.ivs=[];S.audio=$('#cAudio').checked;renderStatus();renderTranscript();renderPane();if(S.audio)startAudio();
+  }catch(err){toast(err.message)}};
+$('#btnPause').onclick=async()=>{const a=S.status==='paused'?'resume':'pause';const s=await api(`/sessions/${S.sid}/${a}`,{method:'POST'});S.status=s.status;if(S.status==='paused'){stopMic();S.mr?.pause?.()}else S.mr?.resume?.();renderStatus()};
+$('#btnStop').onclick=async()=>{stopMic();await stopAudio();const s=await api(`/sessions/${S.sid}/stop`,{method:'POST'});S.status=s.status;renderStatus();S.tab='notes';renderPane()};
+$('#modes').onclick=async e=>{const b=e.target.closest('button');if(!b)return;S.mode=b.dataset.mode;if(S.sid)await api(`/sessions/${S.sid}/settings`,{method:'PATCH',body:{mode:S.mode}});renderStatus()};
+
+async function send(text,source='typed',speaking=false){
+  if(!text.trim()||S.status!=='active')return;
+  try{const r=await api(`/sessions/${S.sid}/utterances`,{method:'POST',body:{text,speaker:$('#speaker').value||null,source,user_speaking:speaking}});
+    r.utterance.tags=r.events.map(e=>e.type.replace(/_DETECTED|_MADE/,'').toLowerCase());S.utts.push(r.utterance);
+    r.interventions.forEach(iv=>{S.ivs.push(iv);if(iv.status==='delivered')deliver(iv)});
+    renderTranscript();if(S.tab==='feed')renderPane();
+    if(r.interventions.some(i=>i.status==='delivered'))toast('Companion: '+r.interventions.find(i=>i.status==='delivered').title);
+  }catch(e){toast(e.message)}}
+$('#composer').onsubmit=e=>{e.preventDefault();const v=$('#utt').value;$('#utt').value='';send(v)};
+$('#btnCall').onclick=async()=>{try{const t=$('#utt').value.trim();const r=await api(`/sessions/${S.sid}/call`,{method:'POST',body:{text:t||null}});$('#utt').value='';S.ivs.push(r.intervention);deliver(r.intervention);S.tab='feed';renderPane()}catch(e){toast(e.message)}};
+document.addEventListener('keydown',e=>{const m=e.ctrlKey||e.metaKey;if(m&&e.key==='k'){e.preventDefault();if(!$('#btnCall').disabled)$('#btnCall').click()}
+  if(m&&e.key==='p'){e.preventDefault();if(!$('#btnPause').disabled)$('#btnPause').click()}});
+
+function startMic(){const R=window.SpeechRecognition||window.webkitSpeechRecognition;if(!R)return;const r=new R();r.lang=S.lang;r.continuous=true;r.interimResults=true;
+  r.onresult=ev=>{for(let i=ev.resultIndex;i<ev.results.length;i++){const x=ev.results[i];if(x.isFinal)send(x.transcript.trim(),'browser_stt');else $('#sttState').textContent='… '+x.transcript.slice(-60)}};
+  r.onerror=e=>{$('#sttState').textContent='STT error: '+e.error+(e.error==='not-allowed'?' (microphone permission denied)':'');S.recog=null;$('#btnMic').textContent='🎙 Mic'};
+  r.onend=()=>{if(S.recog&&S.status==='active')try{r.start()}catch{}};r.start();S.recog=r;$('#btnMic').textContent='⏹ Mic on';$('#sttState').textContent='Listening…'}
+function stopMic(){const r=S.recog;S.recog=null;try{r?.stop()}catch{};$('#btnMic').textContent='🎙 Mic';$('#sttState').textContent=''}
+$('#btnMic').onclick=()=>S.recog?stopMic():startMic();
+async function startAudio(){try{const st=await navigator.mediaDevices.getUserMedia({audio:true});S.mr=new MediaRecorder(st);S.chunks=[];S.mr.ondataavailable=e=>e.data.size&&S.chunks.push(e.data);S.mr.start(1000)}
+  catch(e){toast('Audio recording unavailable: '+e.message);S.mr=null}}
+async function stopAudio(){if(!S.mr)return;const mr=S.mr;S.mr=null;await new Promise(r=>{mr.onstop=r;try{mr.stop()}catch{r()}});mr.stream.getTracks().forEach(t=>t.stop());
+  if(S.chunks.length){const b=new Blob(S.chunks,{type:mr.mimeType});await fetch(`/api/sessions/${S.sid}/audio`,{method:'POST',headers:{'content-type':mr.mimeType},body:b})}}
+renderStatus();renderPane();
+</script>
+</body>
+</html>

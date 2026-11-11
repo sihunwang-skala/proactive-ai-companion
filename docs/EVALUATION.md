@@ -1,0 +1,4 @@
+# Evaluation
+`eval/dataset.jsonl`: 40 hand-labelled utterances (EN/KO) across normal/rhetorical/tag questions, wrong vs correct claims, chitchat. Run `python3 eval/run_eval.py`; last output in `docs/eval_output.json`.
+**Caveats:** labels and rules were written by the same author and the error rules were designed around the same topics, so error precision/recall of 1.0 is **circular, not evidence of generalization**. n=40. Latency is detector+policy compute only (≈0.04 ms p50), not STT/network/LLM. Known miss: Korean "…낫죠?" (ambiguous tag vs real question).
+Metrics defined but NOT measured: WER, end-to-end latency, faithfulness/factual accuracy of LLM answers, useful-intervention rate with real users, cost per session hour, recovery rate. UI collects useful/not-useful feedback and dismissals for future measurement.

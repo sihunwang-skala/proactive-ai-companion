@@ -1,0 +1,6 @@
+# Privacy & Security
+**Implemented:** explicit consent gate (API + UI), visible recording indicator, one-click pause/stop, audio recording opt-in and off by default, local SQLite, delete removes rows + audio, configurable retention (`COMPANION_RETENTION_DAYS`), cloud LLM off unless `COMPANION_CLOUD_OPT_IN=1` + key in env (never stored/returned), server binds 127.0.0.1, UI HTML-escapes content.
+**Not implemented:** at-rest encryption (rely on FileVault; SQLCipher is a roadmap item) · authentication/access control (single-user localhost only; do NOT expose to a network) · participant notification beyond the consent checkbox · per-provider data-use disclosures UI.
+**Disclosure:** browser STT may send audio to the browser vendor.
+**Legal (not legal advice, not researched in this build):** recording-consent rules differ by jurisdiction (e.g. some US states require all-party consent; Korea's rules on recording conversations and personal-information handling need review). Items for counsel before any commercial launch: consent wording, retention defaults, cross-border transfer to LLM vendors, minors, workplace monitoring, vendor DPAs and no-training terms.
+No OS permission bypass, hidden recording or system-audio capture exists in this codebase.

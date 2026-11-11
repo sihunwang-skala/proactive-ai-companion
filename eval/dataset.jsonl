@@ -1,0 +1,40 @@
+{"text": "What is the timeline for the beta release?", "label_question": true, "label_error": false, "scenario": "normal_question"}
+{"text": "Can we move the demo to Thursday?", "label_question": true, "label_error": false, "scenario": "normal_question"}
+{"text": "How many users did we onboard last month?", "label_question": true, "label_error": false, "scenario": "normal_question"}
+{"text": "who owns the migration task", "label_question": true, "label_error": false, "scenario": "normal_question_no_punct"}
+{"text": "다음 스프린트 목표는 무엇인가요?", "label_question": true, "label_error": false, "scenario": "normal_question_ko"}
+{"text": "회의록은 누가 작성하나요", "label_question": true, "label_error": false, "scenario": "normal_question_ko"}
+{"text": "Why not just ship it already?", "label_question": false, "label_error": false, "scenario": "rhetorical"}
+{"text": "Who knows what the customers really want?", "label_question": false, "label_error": false, "scenario": "rhetorical"}
+{"text": "That went well, right?", "label_question": false, "label_error": false, "scenario": "tag_question"}
+{"text": "이 방식이 더 낫죠?", "label_question": false, "label_error": false, "scenario": "tag_question_ko"}
+{"text": "Random forest trains its trees sequentially, one after another.", "label_question": false, "label_error": true, "scenario": "wrong_claim"}
+{"text": "Random Forest는 모든 Decision Tree를 순차적으로 학습하는 거지?", "label_question": false, "label_error": true, "scenario": "wrong_claim_ko_tag"}
+{"text": "I think a low p-value means the probability that the null hypothesis is true is small, so the p-value is the probability the null is true.", "label_question": false, "label_error": true, "scenario": "wrong_claim"}
+{"text": "Gradient descent will always find the global minimum, right?", "label_question": false, "label_error": true, "scenario": "wrong_claim"}
+{"text": "Since the correlation is high, correlation implies causation here.", "label_question": false, "label_error": true, "scenario": "wrong_claim"}
+{"text": "경사하강법은 항상 전역 최솟값을 찾아요.", "label_question": false, "label_error": true, "scenario": "wrong_claim_ko"}
+{"text": "과적합이면 훈련 정확도가 낮아져요.", "label_question": false, "label_error": true, "scenario": "wrong_claim_ko"}
+{"text": "Gradient boosting trains trees sequentially, each fixing the previous errors.", "label_question": false, "label_error": false, "scenario": "correct_claim"}
+{"text": "Random forest trees are trained independently on bootstrap samples.", "label_question": false, "label_error": false, "scenario": "correct_claim"}
+{"text": "Correlation does not imply causation.", "label_question": false, "label_error": false, "scenario": "correct_claim"}
+{"text": "Gradient descent can get stuck in local minima on non-convex losses.", "label_question": false, "label_error": false, "scenario": "correct_claim"}
+{"text": "The p-value is computed assuming the null hypothesis is true.", "label_question": false, "label_error": false, "scenario": "correct_claim"}
+{"text": "Nice weather today.", "label_question": false, "label_error": false, "scenario": "chitchat"}
+{"text": "Okay.", "label_question": false, "label_error": false, "scenario": "chitchat"}
+{"text": "Thanks everyone for joining.", "label_question": false, "label_error": false, "scenario": "chitchat"}
+{"text": "네", "label_question": false, "label_error": false, "scenario": "chitchat"}
+{"text": "Let me share my screen real quick.", "label_question": false, "label_error": false, "scenario": "chitchat"}
+{"text": "점심 뭐 먹을까요?", "label_question": true, "label_error": false, "scenario": "chitchat_question"}
+{"text": "Yeah I agree with that.", "label_question": false, "label_error": false, "scenario": "chitchat"}
+{"text": "Hmm.", "label_question": false, "label_error": false, "scenario": "chitchat"}
+{"text": "We have two more agenda items.", "label_question": false, "label_error": false, "scenario": "neutral"}
+{"text": "The roadmap review is next.", "label_question": false, "label_error": false, "scenario": "neutral"}
+{"text": "오늘 안건은 세 가지입니다.", "label_question": false, "label_error": false, "scenario": "neutral"}
+{"text": "Can you hear me okay?", "label_question": true, "label_error": false, "scenario": "normal_question"}
+{"text": "What does overfitting look like in the learning curves?", "label_question": true, "label_error": false, "scenario": "normal_question"}
+{"text": "Is the server running on version 3?", "label_question": true, "label_error": false, "scenario": "normal_question"}
+{"text": "When is the contract renewal due?", "label_question": true, "label_error": false, "scenario": "normal_question"}
+{"text": "So we ship on the 14th.", "label_question": false, "label_error": false, "scenario": "neutral"}
+{"text": "우리가 이걸 왜 이렇게 했는지 설명해 주실 수 있나요?", "label_question": true, "label_error": false, "scenario": "normal_question_ko"}
+{"text": "What could go wrong?", "label_question": false, "label_error": false, "scenario": "rhetorical"}
