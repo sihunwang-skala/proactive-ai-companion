@@ -13,6 +13,7 @@ DEFAULT_SETTINGS = {
     "voice": False,
     "socratic": False,
     "token_budget": 20000,
+    "lang": "en",
 }
 
 PRIORITIES = ("critical", "important", "suggestion", "passive")

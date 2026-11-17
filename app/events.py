@@ -5,6 +5,7 @@ import re
 from dataclasses import dataclass, field
 
 from . import knowledge as kb
+from .i18n import tr
 
 QUESTION = "QUESTION_DETECTED"
 FACTUAL_CLAIM = "FACTUAL_CLAIM_DETECTED"
@@ -128,7 +129,7 @@ def _check_against_documents(text: str, documents: list[dict]) -> list[Event]:
         if doc_nums and claim_nums and not (claim_nums & doc_nums):
             out.append(Event(POSSIBLE_ERROR, 0.55, text, {
                 "verdict": "needs_verification",
-                "correction": f"Your document \"{h['doc']}\" says: \"{h['passage']}\" — the figure mentioned differs. Please verify.",
+                "correction": tr("ko" if kb.has_hangul(text) else "en", "doc_mismatch", doc=h["doc"], p=h["passage"]),
                 "evidence": [{"source": h["doc"], "kind": "user_document", "quote": h["passage"]}],
             }))
     return out

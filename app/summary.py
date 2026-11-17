@@ -5,6 +5,7 @@ from __future__ import annotations
 from collections import Counter
 
 from . import knowledge as kb
+from .i18n import tr
 
 
 def fmt_ts(ms: int) -> str:
@@ -12,7 +13,7 @@ def fmt_ts(ms: int) -> str:
     return f"{s // 60:02d}:{s % 60:02d}"
 
 
-def build_summary(session: dict, utts: list[dict], events: list[dict], ivs: list[dict]) -> dict:
+def build_summary(session: dict, utts: list[dict], events: list[dict], ivs: list[dict], lang: str = "en") -> dict:
     by_id = {u["id"]: u for u in utts}
 
     def ref(e):
@@ -53,12 +54,11 @@ def build_summary(session: dict, utts: list[dict], events: list[dict], ivs: list
 
     dur = (utts[-1]["ts_ms"] - utts[0]["ts_ms"]) if len(utts) > 1 else 0
     speakers = sorted({u["speaker"] for u in utts if u["speaker"]})
-    exec_sum = (f"{len(utts)} utterances over {fmt_ts(dur)} from {len(speakers) or 1} labelled speaker(s). "
-                f"{len(decisions)} decision(s), {len(actions)} action item(s), {len(unresolved)} unresolved question(s), "
-                f"{len(contradictions)} contradiction(s), {len(risks)} possible error(s) flagged.") if utts else "No utterances recorded."
+    exec_sum = tr(lang, "summary", n=len(utts), dur=fmt_ts(dur), sp=len(speakers) or 1, d=len(decisions), a=len(actions),
+                  q=len(unresolved), c=len(contradictions), e=len(risks)) if utts else tr(lang, "no_utt")
 
-    follow = [f"Assign an owner/deadline: \"{a['text']}\"" for a in actions if not a["owner"] or not a["deadline"]]
-    follow += [f"Resolve open question: \"{q['text']}\"" for q in unresolved]
+    follow = [tr(lang, "fu_owner", t=a["text"]) for a in actions if not a["owner"] or not a["deadline"]]
+    follow += [tr(lang, "fu_q", t=q["text"]) for q in unresolved]
     return {
         "generated_by": "local_extractive",
         "executive_summary": exec_sum, "topics": topics, "decisions": decisions, "action_items": actions,

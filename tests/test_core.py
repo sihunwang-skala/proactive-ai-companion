@@ -307,3 +307,14 @@ def test_cloud_requires_opt_in():
     with pytest.raises(SystemExit):
         provider_from_env({"COMPANION_PROVIDER": "openai", "COMPANION_API_KEY": "k", "COMPANION_MODEL": "m"})
     assert provider_from_env({}).available is False
+
+
+def test_korean_session_composes_korean_text(client):
+    sid = start(client, "hold", settings={"lang": "ko"})
+    client.post("/api/documents", json={"name": "계획.md", "text": "3분기 마케팅 예산은 5000만원입니다."})
+    iv = say(client, sid, "3분기 마케팅 예산이 얼마인가요?")["interventions"][0]
+    assert iv["title"] == "답변 제안" and "5000만원" in iv["body"]
+    say(client, sid, "예산은 5000만원입니다.", ts=1000)
+    c = say(client, sid, "예산은 8000만원입니다.", ts=40000)["interventions"][0]
+    assert c["title"] == "모순 가능성" and '"5000만원"' in c["body"]
+    assert "발화" in client.get(f"/api/sessions/{sid}/summary").json()["executive_summary"]

@@ -13,7 +13,7 @@
 *{box-sizing:border-box}html,body{height:100%}
 body{margin:0;background:var(--bg);color:var(--text);font:14px/1.5 var(--font);-webkit-font-smoothing:antialiased}
 button,input,select,textarea{font:inherit;color:inherit}
-button{cursor:pointer;border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:6px 12px;min-height:34px}
+a{text-decoration:none;color:inherit}button{cursor:pointer;border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:6px 12px;min-height:34px}
 button:hover{background:var(--surface2)}button.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);font-weight:600}
 button.danger{color:var(--crit)}button:disabled{opacity:.45;cursor:not-allowed}
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
@@ -66,36 +66,37 @@ ul.clean{margin:4px 0 12px;padding-left:18px}h4{margin:14px 0 2px;font-size:13px
   <h1>Proactive AI Companion</h1>
   <span class="rec" id="rec" role="status" aria-live="polite"><span class="dot"></span><span id="recText">Not listening</span></span>
   <div class="seg" role="group" aria-label="Intervention mode" id="modes">
-    <button data-mode="hold" aria-pressed="true" title="AI drafts suggestions; you approve">Hold</button>
-    <button data-mode="called_on" aria-pressed="false" title="AI answers only when you call (Ctrl/⌘+K)">Called On</button>
-    <button data-mode="interject" aria-pressed="false" title="AI may interject when confident and valuable">Interject</button>
+    <button data-mode="hold" aria-pressed="true" data-i18n="m_hold" data-i18n-title="m_hold_t">Hold</button>
+    <button data-mode="called_on" aria-pressed="false" data-i18n="m_called" data-i18n-title="m_called_t">Called On</button>
+    <button data-mode="interject" aria-pressed="false" data-i18n="m_inter" data-i18n-title="m_inter_t">Interject</button>
   </div>
   <span class="sp"></span>
-  <button id="btnCall" disabled title="Ctrl/⌘+K">Ask AI</button>
-  <button id="btnStart" class="primary">Start session</button>
-  <button id="btnPause" disabled>Pause</button>
-  <button id="btnStop" class="danger" disabled>Stop</button>
+  <button id="btnCall" disabled data-i18n="ask" title="Ctrl/⌘+K">Ask AI</button>
+  <button id="btnStart" class="primary" data-i18n="start">Start session</button>
+  <button id="btnPause" disabled data-i18n="pause">Pause</button>
+  <button id="btnStop" class="danger" disabled data-i18n="stop">Stop</button>
+  <button id="btnLang" aria-label="Language" title="English / 한국어">EN / 한</button>
   <button id="btnTheme" aria-label="Toggle theme">◐</button>
 </header>
 <main>
   <section class="panel" aria-label="Transcript">
-    <h2>Live transcript <span class="sp"></span><span class="meta" id="sttState"></span></h2>
-    <div class="scroll" id="transcript"><div class="empty">Start a session, then speak (browser speech recognition) or type below.</div></div>
+    <h2><span data-i18n="transcript">Live transcript</span> <span class="sp"></span><span class="meta" id="sttState"></span></h2>
+    <div class="scroll" id="transcript"><div class="empty" data-i18n="empty_tr">Start a session, then speak (browser speech recognition) or type below.</div></div>
     <form class="composer" id="composer">
-      <input class="spk" type="text" id="speaker" placeholder="Speaker" aria-label="Speaker label" value="Me">
-      <input type="text" id="utt" placeholder="Type an utterance (simulates speech)…" aria-label="Utterance" autocomplete="off">
-      <button class="primary" id="btnSend" disabled>Send</button>
+      <input class="spk" type="text" id="speaker" data-i18n-ph="speaker" placeholder="Speaker" aria-label="Speaker label" value="Me">
+      <input type="text" id="utt" data-i18n-ph="utt_ph" placeholder="Type an utterance (simulates speech)…" aria-label="Utterance" autocomplete="off">
+      <button class="primary" id="btnSend" disabled data-i18n="send">Send</button>
       <button type="button" id="btnMic" disabled>🎙 Mic</button>
     </form>
   </section>
   <section class="panel" aria-label="Companion">
     <div class="tabs" role="tablist" id="tabs">
-      <button role="tab" aria-selected="true" data-tab="feed">Suggestions</button>
-      <button role="tab" aria-selected="false" data-tab="notes">Notes</button>
-      <button role="tab" aria-selected="false" data-tab="evidence">Knowledge</button>
-      <button role="tab" aria-selected="false" data-tab="history">History</button>
-      <button role="tab" aria-selected="false" data-tab="cost">Cost</button>
-      <button role="tab" aria-selected="false" data-tab="settings">Settings</button>
+      <button role="tab" aria-selected="true" data-tab="feed" data-i18n="tab_feed">Suggestions</button>
+      <button role="tab" aria-selected="false" data-tab="notes" data-i18n="tab_notes">Notes</button>
+      <button role="tab" aria-selected="false" data-tab="evidence" data-i18n="tab_evidence">Knowledge</button>
+      <button role="tab" aria-selected="false" data-tab="history" data-i18n="tab_history">History</button>
+      <button role="tab" aria-selected="false" data-tab="cost" data-i18n="tab_cost">Cost</button>
+      <button role="tab" aria-selected="false" data-tab="settings" data-i18n="tab_settings">Settings</button>
     </div>
     <div class="scroll" id="pane"></div>
   </section>
@@ -104,16 +105,16 @@ ul.clean{margin:4px 0 12px;padding-left:18px}h4{margin:14px 0 2px;font-size:13px
 
 <dialog id="consent">
   <form method="dialog" id="consentForm">
-    <h2 style="margin-top:0">Start a session</h2>
-    <div class="field"><label for="title">Title</label><input type="text" id="title" placeholder="e.g. Weekly product sync"></div>
+    <h2 style="margin-top:0" data-i18n="c_title">Start a session</h2>
+    <div class="field"><label for="title" data-i18n="c_name">Title</label><input type="text" id="title" placeholder="e.g. Weekly product sync"></div>
     <div class="grid2">
-      <div class="field"><label for="profile">Profile</label><select id="profile"><option value="meeting">Meeting</option><option value="learning">Learning</option><option value="work">Work</option></select></div>
-      <div class="field"><label for="lang">Speech language</label><select id="lang"><option value="en-US">English</option><option value="ko-KR">한국어</option></select></div>
+      <div class="field"><label for="profile" data-i18n="c_profile">Profile</label><select id="profile"><option value="meeting" data-i18n="p_meeting">Meeting</option><option value="learning" data-i18n="p_learning">Learning</option><option value="work" data-i18n="p_work">Work</option></select></div>
+      <div class="field"><label for="lang" data-i18n="c_lang">Speech language</label><select id="lang"><option value="en-US">English</option><option value="ko-KR">한국어</option></select></div>
     </div>
-    <label class="row"><input type="checkbox" id="cConsent"><span>I understand this session will capture and transcribe speech, and that <b>everyone being recorded has been informed</b> and, where the law requires, has consented.</span></label>
-    <label class="row"><input type="checkbox" id="cAudio"><span>Also save an audio recording on this computer (optional).</span></label>
-    <p class="note">Speech-to-text uses your browser's Web Speech API. In Chrome and Safari the browser vendor may process audio in the cloud. Companion itself keeps data in a local SQLite file and sends nothing to any LLM unless you configured a provider on the server.</p>
-    <div style="display:flex;gap:8px;justify-content:flex-end"><button value="cancel">Cancel</button><button class="primary" id="cGo" value="go" disabled>Start listening</button></div>
+    <label class="row"><input type="checkbox" id="cConsent"><span data-i18n-html="c_consent">I understand…</span></label>
+    <label class="row"><input type="checkbox" id="cAudio"><span data-i18n="c_audio">Also save an audio recording on this computer (optional).</span></label>
+    <p class="note" data-i18n="c_note">Speech-to-text note</p>
+    <div style="display:flex;gap:8px;justify-content:flex-end"><button value="cancel" data-i18n="cancel">Cancel</button><button class="primary" id="cGo" value="go" disabled data-i18n="c_go">Start listening</button></div>
   </form>
 </dialog>
 <div class="toast" id="toast" role="alert"></div>
@@ -124,80 +125,119 @@ const $=s=>document.querySelector(s), api=async(p,o={})=>{const r=await fetch('/
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const mmss=ms=>{const s=Math.max(0,Math.floor(ms/1000));return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')};
 const toast=m=>{const t=$('#toast');t.textContent=m;t.style.display='block';clearTimeout(toast.h);toast.h=setTimeout(()=>t.style.display='none',3500)};
+
+const I={en:{ask:'Ask AI',start:'Start session',pause:'Pause',resume:'Resume',stop:'Stop',m_hold:'Hold',m_hold_t:'AI drafts suggestions; you approve',m_called:'Called On',m_called_t:'AI answers only when you call (Ctrl/⌘+K)',m_inter:'Interject',m_inter_t:'AI may interject when confident and valuable',
+ transcript:'Live transcript',empty_tr:'Start a session, then speak (browser speech recognition) or type below.',no_utt:'No utterances yet.',speaker:'Speaker',utt_ph:'Type an utterance (simulates speech)…',send:'Send',mic:'🎙 Mic',mic_on:'⏹ Mic on',
+ tab_feed:'Suggestions',tab_notes:'Notes',tab_evidence:'Knowledge',tab_history:'History',tab_cost:'Cost',tab_settings:'Settings',
+ idle:'Not listening',listening:'Listening — session active',paused:'Paused',stt_na:'Browser STT unavailable — typed input only',
+ c_title:'Start a session',c_name:'Title',c_profile:'Profile',p_meeting:'Meeting',p_learning:'Learning',p_work:'Work',c_lang:'Speech language',
+ c_consent:'I understand this session will capture and transcribe speech, and that <b>everyone being recorded has been informed</b> and, where the law requires, has consented.',
+ c_audio:'Also save an audio recording on this computer (optional).',c_note:"Speech-to-text uses your browser's Web Speech API. In Chrome and Safari the browser vendor may process audio in the cloud. Companion itself keeps data in a local SQLite file and sends nothing to any LLM unless you configured a provider on the server.",cancel:'Cancel',c_go:'Start listening',
+ critical:'Critical',important:'Important',suggestion:'Suggestion',passive:'Noted',deliver:'Deliver',save:'Save',dismiss:'Dismiss',useful:'👍 Useful',not_useful:'👎 Not useful',at:'at',conf:'confidence',asked:'you asked',unverified:'unverified, model-generated',
+ feed_empty:'Nothing to suggest yet. The companion stays quiet until something is worth your attention.',pick_session:'Start or open a session.',local_note:'(extractive, generated locally)',
+ n_dec:'Decisions',n_act:'Action items',n_unres:'Unresolved questions',n_con:'Contradictions',n_err:'Possible errors',n_fu:'Follow-ups',none:'None',owner:'owner',deadline:'deadline',not_stated:'not stated',exp_md:'Export Markdown',exp_json:'Export JSON',
+ k_note:'Documents you add here are used for retrieval, answers and numeric fact-checks. Nothing leaves your machine unless a cloud LLM provider is configured.',k_name:'Name',k_text:'Text',k_add_s:'Add to knowledge base (this session)',k_add_g:'Add to knowledge base (global)',k_docs:'Documents',k_none:'None yet',
+ h_search:'Search sessions and transcripts…',open:'Open',del:'Delete',h_none:'No sessions',h_confirm:'Permanently delete this session, transcript and audio?',
+ co_proc:'Processing',co_calls:'Cloud LLM calls',co_tok:'Tokens in / out',co_cost:'LLM cost (estimate)',co_stt:'STT cost',co_local:'Local events',co_lat:'Server latency p50 / p95',co_dis:'Dismissed',co_fb:'Useful / not useful',browser:'$0 (browser)',
+ s_start:'Start a session to edit its settings.',s_inter:'Interject score threshold',s_conf:'Confidence threshold',s_cool:'Cooldown (s)',s_max:'Max interruptions',s_dnd:'Do not disturb (cards only, never interject)',s_soc:'Socratic mode (hints instead of answers)',s_voice:'Speak delivered suggestions aloud (OS text-to-speech)',s_apply:'Apply',s_short:'Shortcuts: Ctrl/⌘+K ask AI · Ctrl/⌘+Enter send · Ctrl/⌘+P pause.',s_ok:'Settings applied',
+ v_confirmed_error:'confirmed error',v_needs_verification:'needs verification',companion:'Companion',stt_err:'STT error: ',mic_denied:' (microphone permission denied)',listen:'Listening…',audio_na:'Audio recording unavailable: '},
+ko:{ask:'AI에게 질문',start:'세션 시작',pause:'일시정지',resume:'재개',stop:'종료',m_hold:'보류',m_hold_t:'AI가 제안을 준비하고 사용자가 승인합니다',m_called:'호출 시',m_called_t:'호출할 때만 AI가 답합니다 (Ctrl/⌘+K)',m_inter:'능동 개입',m_inter_t:'확신이 높고 가치가 있을 때 AI가 먼저 끼어듭니다',
+ transcript:'실시간 대화 기록',empty_tr:'세션을 시작한 뒤 말하거나(브라우저 음성 인식) 아래에 입력하세요.',no_utt:'아직 발화가 없습니다.',speaker:'화자',utt_ph:'발화를 입력하세요 (음성 대신 입력)…',send:'보내기',mic:'🎙 마이크',mic_on:'⏹ 마이크 켜짐',
+ tab_feed:'제안',tab_notes:'노트',tab_evidence:'지식',tab_history:'기록',tab_cost:'비용',tab_settings:'설정',
+ idle:'듣지 않는 중',listening:'듣는 중 — 세션 진행',paused:'일시정지',stt_na:'브라우저 음성 인식을 사용할 수 없어 텍스트 입력만 가능합니다',
+ c_title:'세션 시작',c_name:'제목',c_profile:'유형',p_meeting:'회의',p_learning:'학습',p_work:'업무',c_lang:'음성 인식 언어',
+ c_consent:'이 세션에서 음성이 수집·텍스트로 변환된다는 점을 이해하며, <b>녹음되는 모든 사람에게 고지했고</b> 법적으로 필요한 경우 동의를 받았습니다.',
+ c_audio:'이 컴퓨터에 음성 녹음도 저장합니다 (선택).',c_note:'음성 인식은 브라우저의 Web Speech API를 사용합니다. Chrome과 Safari에서는 브라우저 제공사가 음성을 클라우드에서 처리할 수 있습니다. Companion 자체는 데이터를 로컬 SQLite 파일에 저장하며, 서버에 제공자를 설정하지 않는 한 LLM으로 아무것도 전송하지 않습니다.',cancel:'취소',c_go:'듣기 시작',
+ critical:'중요(긴급)',important:'중요',suggestion:'제안',passive:'기록됨',deliver:'전달',save:'저장',dismiss:'무시',useful:'👍 도움됨',not_useful:'👎 도움 안 됨',at:'시점',conf:'신뢰도',asked:'직접 질문',unverified:'미검증, 모델 생성',
+ feed_empty:'아직 제안할 내용이 없습니다. 주의가 필요한 순간이 올 때까지 조용히 기다립니다.',pick_session:'세션을 시작하거나 여세요.',local_note:'(추출식 요약, 로컬 생성)',
+ n_dec:'결정사항',n_act:'할 일',n_unres:'미해결 질문',n_con:'모순',n_err:'오류 가능성',n_fu:'후속 조치',none:'없음',owner:'담당',deadline:'기한',not_stated:'언급 없음',exp_md:'Markdown 내보내기',exp_json:'JSON 내보내기',
+ k_note:'여기에 추가한 문서는 검색, 답변, 수치 사실 확인에 사용됩니다. 클라우드 LLM 제공자를 설정하지 않으면 내 컴퓨터 밖으로 나가지 않습니다.',k_name:'이름',k_text:'내용',k_add_s:'지식에 추가 (이 세션)',k_add_g:'지식에 추가 (전체)',k_docs:'문서',k_none:'아직 없음',
+ h_search:'세션과 대화 기록 검색…',open:'열기',del:'삭제',h_none:'세션 없음',h_confirm:'이 세션과 대화 기록, 녹음을 영구 삭제할까요?',
+ co_proc:'처리 방식',co_calls:'클라우드 LLM 호출',co_tok:'토큰 입력 / 출력',co_cost:'LLM 비용 (추정)',co_stt:'음성 인식 비용',co_local:'로컬 이벤트',co_lat:'서버 지연 p50 / p95',co_dis:'무시함',co_fb:'도움됨 / 도움 안 됨',browser:'$0 (브라우저)',
+ s_start:'세션을 시작하면 설정을 바꿀 수 있습니다.',s_inter:'개입 점수 임계값',s_conf:'신뢰도 임계값',s_cool:'쿨다운(초)',s_max:'최대 개입 횟수',s_dnd:'방해 금지 (카드만 표시, 끼어들지 않음)',s_soc:'소크라테스 모드 (정답 대신 힌트)',s_voice:'전달된 제안을 음성으로 읽기 (OS 음성 합성)',s_apply:'적용',s_short:'단축키: Ctrl/⌘+K AI 질문 · Ctrl/⌘+Enter 보내기 · Ctrl/⌘+P 일시정지',s_ok:'설정을 적용했습니다',
+ v_confirmed_error:'확인된 오류',v_needs_verification:'확인 필요',companion:'Companion',stt_err:'음성 인식 오류: ',mic_denied:' (마이크 권한이 거부됨)',listen:'듣는 중…',audio_na:'녹음을 사용할 수 없음: '}};
+let LANG='en';try{LANG=new URLSearchParams(location.search).get('lang')||localStorage.getItem('lang')||((navigator.language||'').startsWith('ko')?'ko':'en')}catch{}
+if(!I[LANG])LANG='en';
+const t=k=>I[LANG][k]??I.en[k]??k;
+function applyI18n(){document.documentElement.lang=LANG;
+ document.querySelectorAll('[data-i18n]').forEach(e=>e.textContent=t(e.dataset.i18n));
+ document.querySelectorAll('[data-i18n-html]').forEach(e=>e.innerHTML=t(e.dataset.i18nHtml));
+ document.querySelectorAll('[data-i18n-ph]').forEach(e=>e.placeholder=t(e.dataset.i18nPh));
+ document.querySelectorAll('[data-i18n-title]').forEach(e=>e.title=t(e.dataset.i18nTitle));
+ $('#lang').value=LANG==='ko'?'ko-KR':'en-US';$('#btnMic').textContent=t(S.recog?'mic_on':'mic');renderStatus();renderTranscript();renderPane()}
 const S={sid:null,status:'idle',mode:'hold',tab:'feed',utts:[],ivs:[],lang:'en-US',recog:null,mr:null,chunks:[],settings:{}};
 try{const th=localStorage.getItem('theme');if(th)document.documentElement.dataset.theme=th}catch{}
 $('#btnTheme').onclick=()=>{const t=document.documentElement.dataset.theme==='dark'?'light':'dark';document.documentElement.dataset.theme=t;try{localStorage.setItem('theme',t)}catch{}};
 
 function renderStatus(){
   const on=S.status==='active';$('#rec').className='rec'+(on?' on':'');
-  $('#recText').textContent=on?'Listening — session active':S.status==='paused'?'Paused':'Not listening';
+  $('#recText').textContent=on?t('listening'):S.status==='paused'?t('paused'):t('idle');
   $('#btnStart').disabled=S.status==='active'||S.status==='paused';
-  $('#btnPause').disabled=!(S.status==='active'||S.status==='paused');$('#btnPause').textContent=S.status==='paused'?'Resume':'Pause';
+  $('#btnPause').disabled=!(S.status==='active'||S.status==='paused');$('#btnPause').textContent=S.status==='paused'?t('resume'):t('pause');
   $('#btnStop').disabled=!(S.status==='active'||S.status==='paused');
   $('#btnSend').disabled=$('#btnCall').disabled=!on;$('#btnMic').disabled=!on||!(window.SpeechRecognition||window.webkitSpeechRecognition);
-  if(!(window.SpeechRecognition||window.webkitSpeechRecognition))$('#sttState').textContent='Browser STT unavailable — typed input only';
+  if(!(window.SpeechRecognition||window.webkitSpeechRecognition))$('#sttState').textContent=t('stt_na');
   document.querySelectorAll('#modes button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.mode===S.mode));
 }
 function renderTranscript(){
   const el=$('#transcript');
-  if(!S.utts.length){el.innerHTML='<div class="empty">No utterances yet.</div>';return}
+  if(!S.utts.length){el.innerHTML='<div class="empty">'+t(S.sid?'no_utt':'empty_tr')+'</div>';return}
   el.innerHTML=S.utts.map(u=>`<div class="u" id="u-${u.id}"><time>${mmss(u.ts_ms)}</time><div><b>${esc(u.speaker||'Speaker')}</b> ${esc(u.text)}<div class="tags">${(u.tags||[]).map(t=>`<span class="tag">${esc(t)}</span>`).join('')}</div></div></div>`).join('');
   el.scrollTop=el.scrollHeight;
 }
-const LABEL={critical:'Critical',important:'Important',suggestion:'Suggestion',passive:'Noted'};
 function card(iv){
-  const ev=(iv.evidence||[]).map(e=>`<div class="ev">${esc(e.kind)}${e.source?': '+esc(e.source):''}${e.quote?' — “'+esc(e.quote)+'”':''}${e.verified===false?' · <b>unverified, model-generated</b>':''}</div>`).join('');
+  const ev=(iv.evidence||[]).map(e=>`<div class="ev">${esc(e.kind)}${e.source?': '+esc(e.source):''}${e.quote?' — “'+esc(e.quote)+'”':''}${e.verified===false?' · <b>'+t('unverified')+'</b>':''}</div>`).join('');
   const u=S.utts.find(x=>x.id===iv.utterance_id);
-  const acts=iv.status==='pending'?`<button class="primary" data-a="approve" data-id="${iv.id}">Deliver</button><button data-a="save" data-id="${iv.id}">Save</button><button data-a="dismiss" data-id="${iv.id}">Dismiss</button>`:
-    iv.status==='dismissed'?'':`<button data-f="useful" data-id="${iv.id}" ${iv.feedback==='useful'?'disabled':''}>👍 Useful</button><button data-f="not_useful" data-id="${iv.id}" ${iv.feedback==='not_useful'?'disabled':''}>👎 Not useful</button>${iv.status!=='saved'?`<button data-a="save" data-id="${iv.id}">Save</button>`:''}`;
-  return `<article class="card ${iv.priority} ${iv.status}"><h3><span class="badge">${LABEL[iv.priority]}</span>${esc(iv.title)}</h3><p>${esc(iv.body)}</p>${ev}
-  <div class="meta">${u?`at ${mmss(u.ts_ms)} · `:''}confidence ${Math.round((iv.confidence||0)*100)}% · ${esc(iv.status)}${iv.trigger==='called'?' · you asked':''}</div><div class="act">${acts}</div></article>`;
+  const acts=iv.status==='pending'?`<button class="primary" data-a="approve" data-id="${iv.id}">${t('deliver')}</button><button data-a="save" data-id="${iv.id}">${t('save')}</button><button data-a="dismiss" data-id="${iv.id}">${t('dismiss')}</button>`:
+    iv.status==='dismissed'?'':`<button data-f="useful" data-id="${iv.id}" ${iv.feedback==='useful'?'disabled':''}>${t('useful')}</button><button data-f="not_useful" data-id="${iv.id}" ${iv.feedback==='not_useful'?'disabled':''}>${t('not_useful')}</button>${iv.status!=='saved'?`<button data-a="save" data-id="${iv.id}">${t('save')}</button>`:''}`;
+  return `<article class="card ${iv.priority} ${iv.status}"><h3><span class="badge">${t(iv.priority)}</span>${esc(iv.title)}</h3><p>${esc(iv.body)}</p>${ev}
+  <div class="meta">${u?`${t('at')} ${mmss(u.ts_ms)} · `:''}${t('conf')} ${Math.round((iv.confidence||0)*100)}% · ${esc(iv.status)}${iv.trigger==='called'?' · '+t('asked'):''}</div><div class="act">${acts}</div></article>`;
 }
 async function renderPane(){
   const p=$('#pane');document.querySelectorAll('#tabs button').forEach(b=>b.setAttribute('aria-selected',b.dataset.tab===S.tab));
   if(S.tab==='feed'){
     const ivs=[...S.ivs].reverse();
-    p.innerHTML=ivs.length?ivs.map(card).join(''):'<div class="empty">Nothing to suggest yet. The companion stays quiet until something is worth your attention.</div>';
+    p.innerHTML=ivs.length?ivs.map(card).join(''):'<div class="empty">'+t('feed_empty')+'</div>';
   }else if(S.tab==='notes'){
-    if(!S.sid){p.innerHTML='<div class="empty">Start or open a session.</div>';return}
+    if(!S.sid){p.innerHTML='<div class="empty">'+t('pick_session')+'</div>';return}
     const s=await api(`/sessions/${S.sid}/summary`);
-    const L=(t,a,f)=>`<h4>${t}</h4>${a.length?'<ul class="clean">'+a.map(f).join('')+'</ul>':'<div class="meta">None</div>'}`;
-    p.innerHTML=`<div class="note">${esc(s.executive_summary)} <i>(extractive, generated locally)</i></div>`+
-      L('Decisions',s.decisions,d=>`<li>[${d.ts}] ${esc(d.text)}</li>`)+
-      L('Action items',s.action_items,a=>`<li>[${a.ts}] ${esc(a.text)} — owner: <b>${esc(a.owner||'not stated')}</b>, deadline: <b>${esc(a.deadline||'not stated')}</b></li>`)+
-      L('Unresolved questions',s.unresolved_questions,q=>`<li>[${q.ts}] ${esc(q.text)}</li>`)+
-      L('Contradictions',s.contradictions,c=>`<li>[${c.ts}] ${esc(c.subject)}: “${esc(c.earlier)}” → “${esc(c.now)}”</li>`)+
-      L('Possible errors',s.possible_errors,r=>`<li>[${r.ts}] <i>${esc(r.verdict)}</i> ${esc(r.text)}</li>`)+
-      L('Follow-ups',s.follow_ups,f=>`<li>${esc(f)}</li>`)+
-      `<div style="display:flex;gap:8px;margin-top:12px"><a href="/api/sessions/${S.sid}/export?format=md"><button>Export Markdown</button></a><a href="/api/sessions/${S.sid}/export?format=json"><button>Export JSON</button></a></div>`;
+    const L=(ti,a,f)=>`<h4>${ti}</h4>${a.length?'<ul class="clean">'+a.map(f).join('')+'</ul>':'<div class="meta">'+t('none')+'</div>'}`;
+    p.innerHTML=`<div class="note">${esc(s.executive_summary)} <i>${t('local_note')}</i></div>`+
+      L(t('n_dec'),s.decisions,d=>`<li>[${d.ts}] ${esc(d.text)}</li>`)+
+      L(t('n_act'),s.action_items,a=>`<li>[${a.ts}] ${esc(a.text)} — ${t('owner')}: <b>${esc(a.owner||t('not_stated'))}</b>, ${t('deadline')}: <b>${esc(a.deadline||t('not_stated'))}</b></li>`)+
+      L(t('n_unres'),s.unresolved_questions,q=>`<li>[${q.ts}] ${esc(q.text)}</li>`)+
+      L(t('n_con'),s.contradictions,c=>`<li>[${c.ts}] ${esc(c.subject)}: “${esc(c.earlier)}” → “${esc(c.now)}”</li>`)+
+      L(t('n_err'),s.possible_errors,r=>`<li>[${r.ts}] <i>${t('v_'+r.verdict)}</i> ${esc(r.text)}</li>`)+
+      L(t('n_fu'),s.follow_ups,f=>`<li>${esc(f)}</li>`)+
+      `<div style="display:flex;gap:8px;margin-top:12px"><a href="/api/sessions/${S.sid}/export?format=md"><button>${t('exp_md')}</button></a><a href="/api/sessions/${S.sid}/export?format=json"><button>${t('exp_json')}</button></a></div>`;
   }else if(S.tab==='evidence'){
     const d=await api('/documents'+(S.sid?`?session_id=${S.sid}`:''));
-    p.innerHTML=`<div class="note">Documents you add here are used for retrieval, answers and numeric fact-checks. Nothing leaves your machine unless a cloud LLM provider is configured.</div>
-    <div class="field" style="margin-top:12px"><label for="dn">Name</label><input type="text" id="dn" placeholder="notes.md"></div>
-    <div class="field"><label for="dt">Text</label><textarea id="dt" rows="6"></textarea></div><button class="primary" id="dadd">Add to knowledge base${S.sid?' (this session)':' (global)'}</button>
-    <h4>Documents</h4>${d.length?'<ul class="clean">'+d.map(x=>`<li>${esc(x.name)}</li>`).join('')+'</ul>':'<div class="meta">None yet</div>'}`;
+    p.innerHTML=`<div class="note">${t('k_note')}</div>
+    <div class="field" style="margin-top:12px"><label for="dn">${t('k_name')}</label><input type="text" id="dn" placeholder="notes.md"></div>
+    <div class="field"><label for="dt">${t('k_text')}</label><textarea id="dt" rows="6"></textarea></div><button class="primary" id="dadd">${t(S.sid?'k_add_s':'k_add_g')}</button>
+    <h4>${t('k_docs')}</h4>${d.length?'<ul class="clean">'+d.map(x=>`<li>${esc(x.name)}</li>`).join('')+'</ul>':'<div class="meta">'+t('k_none')+'</div>'}`;
     $('#dadd').onclick=async()=>{try{await api('/documents',{method:'POST',body:{name:$('#dn').value||'untitled',text:$('#dt').value,session_id:S.sid}});renderPane()}catch(e){toast(e.message)}};
   }else if(S.tab==='history'){
-    p.innerHTML=`<input type="text" id="hq" placeholder="Search sessions and transcripts…" aria-label="Search"><div id="hl" style="margin-top:10px"></div>`;
+    p.innerHTML=`<input type="text" id="hq" placeholder="${t('h_search')}" aria-label="Search"><div id="hl" style="margin-top:10px"></div>`;
     const load=async()=>{const l=await api('/sessions'+($('#hq').value?`?q=${encodeURIComponent($('#hq').value)}`:''));
       $('#hl').innerHTML=l.length?l.map(s=>`<div class="card passive"><h3>${esc(s.title)}</h3><div class="meta">${new Date(s.started_at*1000).toLocaleString()} · ${s.profile} · ${s.status}</div>
-      <div class="act"><button data-open="${s.id}">Open</button><button data-del="${s.id}" class="danger">Delete</button></div></div>`).join(''):'<div class="empty">No sessions</div>'};
+      <div class="act"><button data-open="${s.id}">${t('open')}</button><button data-del="${s.id}" class="danger">${t('del')}</button></div></div>`).join(''):'<div class="empty">'+t('h_none')+'</div>'};
     $('#hq').oninput=load;load();
   }else if(S.tab==='cost'){
-    if(!S.sid){p.innerHTML='<div class="empty">Start or open a session.</div>';return}
+    if(!S.sid){p.innerHTML='<div class="empty">'+t('pick_session')+'</div>';return}
     const [c,m]=await Promise.all([api(`/sessions/${S.sid}/cost`),api(`/sessions/${S.sid}/metrics`)]);
-    p.innerHTML=`<dl class="kv"><dt>Processing</dt><dd>${esc(c.processing)}</dd><dt>Cloud LLM calls</dt><dd>${c.cloud_llm_calls}</dd><dt>Tokens in / out</dt><dd>${c.tokens_in} / ${c.tokens_out}</dd>
-    <dt>LLM cost (estimate)</dt><dd>${c.estimated_cost_usd==null?'—':'$'+c.estimated_cost_usd}</dd><dt>STT cost</dt><dd>$0 (browser)</dd><dt>Local events</dt><dd>${c.local_events_processed}</dd>
-    <dt>Server latency p50 / p95</dt><dd>${m.server_processing_ms_p50??'—'} / ${m.server_processing_ms_p95??'—'} ms</dd><dt>Dismissed</dt><dd>${m.dismissed}/${m.interventions}</dd><dt>Useful / not useful</dt><dd>${m.useful} / ${m.not_useful}</dd></dl>
+    p.innerHTML=`<dl class="kv"><dt>${t('co_proc')}</dt><dd>${esc(c.processing)}</dd><dt>${t('co_calls')}</dt><dd>${c.cloud_llm_calls}</dd><dt>${t('co_tok')}</dt><dd>${c.tokens_in} / ${c.tokens_out}</dd>
+    <dt>${t('co_cost')}</dt><dd>${c.estimated_cost_usd==null?'—':'$'+c.estimated_cost_usd}</dd><dt>${t('co_stt')}</dt><dd>${t('browser')}</dd><dt>${t('co_local')}</dt><dd>${c.local_events_processed}</dd>
+    <dt>${t('co_lat')}</dt><dd>${m.server_processing_ms_p50??'—'} / ${m.server_processing_ms_p95??'—'} ms</dd><dt>${t('co_dis')}</dt><dd>${m.dismissed}/${m.interventions}</dd><dt>${t('co_fb')}</dt><dd>${m.useful} / ${m.not_useful}</dd></dl>
     <p class="note">${esc(c.cost_note)}<br>${esc(c.stt_note)}<br>${esc(m.note)}</p>`;
   }else if(S.tab==='settings'){
     const s=S.settings,n=(k,l,step=0.05)=>`<div class="field"><label>${l}</label><input type="number" step="${step}" data-s="${k}" value="${s[k]??''}"></div>`;
     const ck=(k,l)=>`<label class="row"><input type="checkbox" data-sc="${k}" ${s[k]?'checked':''}><span>${l}</span></label>`;
-    p.innerHTML=(S.sid?'':'<div class="note">Start a session to edit its settings.</div>')+`<div class="grid2">${n('interject_threshold','Interject score threshold')}${n('confidence_threshold','Confidence threshold')}${n('cooldown_sec','Cooldown (s)',1)}${n('max_interruptions','Max interruptions',1)}</div>
-    ${ck('dnd','Do not disturb (cards only, never interject)')}${ck('socratic','Socratic mode (hints instead of answers)')}${ck('voice','Speak delivered suggestions aloud (OS text-to-speech)')}
-    <button class="primary" id="ssave" ${S.sid?'':'disabled'}>Apply</button><p class="note" style="margin-top:12px">Shortcuts: Ctrl/⌘+K ask AI · Ctrl/⌘+Enter send · Ctrl/⌘+P pause.</p>`;
+    p.innerHTML=(S.sid?'':'<div class="note">'+t('s_start')+'</div>')+`<div class="grid2">${n('interject_threshold',t('s_inter'))}${n('confidence_threshold',t('s_conf'))}${n('cooldown_sec',t('s_cool'),1)}${n('max_interruptions',t('s_max'),1)}</div>
+    ${ck('dnd',t('s_dnd'))}${ck('socratic',t('s_soc'))}${ck('voice',t('s_voice'))}
+    <button class="primary" id="ssave" ${S.sid?'':'disabled'}>${t('s_apply')}</button><p class="note" style="margin-top:12px">${t('s_short')}</p>`;
     $('#ssave').onclick=async()=>{const o={};document.querySelectorAll('[data-s]').forEach(i=>o[i.dataset.s]=Number(i.value));document.querySelectorAll('[data-sc]').forEach(i=>o[i.dataset.sc]=i.checked);
-      const r=await api(`/sessions/${S.sid}/settings`,{method:'PATCH',body:{settings:o}});S.settings=r.settings;toast('Settings applied')};
+      const r=await api(`/sessions/${S.sid}/settings`,{method:'PATCH',body:{settings:o}});S.settings=r.settings;toast(t('s_ok'))};
   }
 }
 $('#tabs').onclick=e=>{const b=e.target.closest('button');if(b){S.tab=b.dataset.tab;renderPane()}};
@@ -206,7 +246,7 @@ $('#pane').onclick=async e=>{const b=e.target.closest('button');if(!b)return;
     if(b.dataset.a||b.dataset.f){const r=await api(`/interventions/${b.dataset.id}/act`,{method:'POST',body:{action:b.dataset.a,feedback:b.dataset.f}});
       S.ivs=S.ivs.map(x=>x.id===r.id?r:x);if(b.dataset.a==='approve')deliver(r);renderPane()}
     if(b.dataset.open)openSession(b.dataset.open);
-    if(b.dataset.del&&confirm('Permanently delete this session, transcript and audio?')){await api('/sessions/'+b.dataset.del,{method:'DELETE'});if(S.sid===b.dataset.del)resetUI();renderPane()}
+    if(b.dataset.del&&confirm(t('h_confirm'))){await api('/sessions/'+b.dataset.del,{method:'DELETE'});if(S.sid===b.dataset.del)resetUI();renderPane()}
   }catch(err){toast(err.message)}};
 function deliver(iv){if(S.settings.voice&&'speechSynthesis'in window){const u=new SpeechSynthesisUtterance(iv.body);u.lang=S.lang;speechSynthesis.speak(u)}}
 function resetUI(){S.sid=null;S.status='idle';S.utts=[];S.ivs=[];renderStatus();renderTranscript()}
@@ -215,7 +255,7 @@ async function openSession(id){const d=await api('/sessions/'+id);S.sid=id;S.sta
 $('#btnStart').onclick=()=>$('#consent').showModal();
 $('#cConsent').onchange=e=>$('#cGo').disabled=!e.target.checked;
 $('#consentForm').onsubmit=async e=>{if(e.submitter?.value!=='go')return;
-  try{const s=await api('/sessions',{method:'POST',body:{title:$('#title').value,profile:$('#profile').value,mode:S.mode,record_audio:$('#cAudio').checked,
+  try{const s=await api('/sessions',{method:'POST',body:{title:$('#title').value,profile:$('#profile').value,mode:S.mode,record_audio:$('#cAudio').checked,settings:{lang:LANG},
     consent:{recording_consent_confirmed:true,participants_notified:true,source:'ui'}}});
     S.lang=$('#lang').value;S.sid=s.id;S.status='active';S.settings=s.settings;S.utts=[];S.ivs=[];S.audio=$('#cAudio').checked;renderStatus();renderTranscript();renderPane();if(S.audio)startAudio();
   }catch(err){toast(err.message)}};
@@ -229,7 +269,7 @@ async function send(text,source='typed',speaking=false){
     r.utterance.tags=r.events.map(e=>e.type.replace(/_DETECTED|_MADE/,'').toLowerCase());S.utts.push(r.utterance);
     r.interventions.forEach(iv=>{S.ivs.push(iv);if(iv.status==='delivered')deliver(iv)});
     renderTranscript();if(S.tab==='feed')renderPane();
-    if(r.interventions.some(i=>i.status==='delivered'))toast('Companion: '+r.interventions.find(i=>i.status==='delivered').title);
+    if(r.interventions.some(i=>i.status==='delivered'))toast(t('companion')+': '+r.interventions.find(i=>i.status==='delivered').title);
   }catch(e){toast(e.message)}}
 $('#composer').onsubmit=e=>{e.preventDefault();const v=$('#utt').value;$('#utt').value='';send(v)};
 $('#btnCall').onclick=async()=>{try{const t=$('#utt').value.trim();const r=await api(`/sessions/${S.sid}/call`,{method:'POST',body:{text:t||null}});$('#utt').value='';S.ivs.push(r.intervention);deliver(r.intervention);S.tab='feed';renderPane()}catch(e){toast(e.message)}};
@@ -238,15 +278,17 @@ document.addEventListener('keydown',e=>{const m=e.ctrlKey||e.metaKey;if(m&&e.key
 
 function startMic(){const R=window.SpeechRecognition||window.webkitSpeechRecognition;if(!R)return;const r=new R();r.lang=S.lang;r.continuous=true;r.interimResults=true;
   r.onresult=ev=>{for(let i=ev.resultIndex;i<ev.results.length;i++){const x=ev.results[i];if(x.isFinal)send(x.transcript.trim(),'browser_stt');else $('#sttState').textContent='… '+x.transcript.slice(-60)}};
-  r.onerror=e=>{$('#sttState').textContent='STT error: '+e.error+(e.error==='not-allowed'?' (microphone permission denied)':'');S.recog=null;$('#btnMic').textContent='🎙 Mic'};
-  r.onend=()=>{if(S.recog&&S.status==='active')try{r.start()}catch{}};r.start();S.recog=r;$('#btnMic').textContent='⏹ Mic on';$('#sttState').textContent='Listening…'}
-function stopMic(){const r=S.recog;S.recog=null;try{r?.stop()}catch{};$('#btnMic').textContent='🎙 Mic';$('#sttState').textContent=''}
+  r.onerror=e=>{$('#sttState').textContent=t('stt_err')+e.error+(e.error==='not-allowed'?t('mic_denied'):'');S.recog=null;$('#btnMic').textContent=t('mic')};
+  r.onend=()=>{if(S.recog&&S.status==='active')try{r.start()}catch{}};r.start();S.recog=r;$('#btnMic').textContent=t('mic_on');$('#sttState').textContent=t('listen')}
+function stopMic(){const r=S.recog;S.recog=null;try{r?.stop()}catch{};$('#btnMic').textContent=t('mic');$('#sttState').textContent=''}
 $('#btnMic').onclick=()=>S.recog?stopMic():startMic();
 async function startAudio(){try{const st=await navigator.mediaDevices.getUserMedia({audio:true});S.mr=new MediaRecorder(st);S.chunks=[];S.mr.ondataavailable=e=>e.data.size&&S.chunks.push(e.data);S.mr.start(1000)}
   catch(e){toast('Audio recording unavailable: '+e.message);S.mr=null}}
 async function stopAudio(){if(!S.mr)return;const mr=S.mr;S.mr=null;await new Promise(r=>{mr.onstop=r;try{mr.stop()}catch{r()}});mr.stream.getTracks().forEach(t=>t.stop());
   if(S.chunks.length){const b=new Blob(S.chunks,{type:mr.mimeType});await fetch(`/api/sessions/${S.sid}/audio`,{method:'POST',headers:{'content-type':mr.mimeType},body:b})}}
-renderStatus();renderPane();
+$('#btnLang').onclick=async()=>{LANG=LANG==='ko'?'en':'ko';try{localStorage.setItem('lang',LANG)}catch{};if(S.sid&&S.status!=='stopped')try{await api(`/sessions/${S.sid}/settings`,{method:'PATCH',body:{settings:{lang:LANG}}})}catch{};applyI18n()};
+applyI18n();
+{const o=new URLSearchParams(location.search).get('open');if(o)openSession(o).then(()=>{const tb=new URLSearchParams(location.search).get('tab');if(tb){S.tab=tb;renderPane()}})}
 </script>
 </body>
 </html>

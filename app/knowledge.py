@@ -172,7 +172,7 @@ def extract_numeric_facts(text: str) -> list[dict]:
             continue
         unit = (m.group("unit") or "").lower().replace(" ", "")
         unit = _UNIT_NORM.get(unit, unit)
-        facts.append({"subj": subj, "unit": unit, "value": float(m.group("num").replace(",", "")), "raw": m.group(0).strip()})
+        facts.append({"subj": subj, "unit": unit, "value": float(m.group("num").replace(",", "")), "raw": m.group(0)[m.start("num") - m.start():].strip()})
     return facts
 
 

@@ -7,6 +7,7 @@ from dataclasses import dataclass, field
 from . import events as E
 from . import knowledge as kb
 from . import policy as P
+from .i18n import tr
 from .providers import Provider, ProviderError
 from .storage import Storage
 from .summary import build_summary, fmt_ts
@@ -105,7 +106,7 @@ class Engine:
         hits = kb.retrieve(question, self.db.documents(sid))
         if hits:
             h = hits[0]
-            return {"text": f"From \"{h['doc']}\": {h['passage']}", "confidence": round(min(0.9, 0.5 + h["score"] * 0.5), 2),
+            return {"text": tr(settings.get("lang", "en"), "from_doc", doc=h["doc"], p=h["passage"]), "confidence": round(min(0.9, 0.5 + h["score"] * 0.5), 2),
                     "evidence": [{"kind": "user_document", "source": x["doc"], "quote": x["passage"], "score": x["score"]} for x in hits],
                     "origin": "local_retrieval"}
         if not (allow_llm and self.provider.available):
@@ -195,23 +196,24 @@ class Engine:
 
     @staticmethod
     def _compose(ev, answer, cfg, mode, profile):
-        m = ev.meta
+        m, L = ev.meta, cfg.get("lang", "en")
         if ev.type == E.POSSIBLE_ERROR:
             if m.get("verdict") == "confirmed_error":
                 socratic = cfg.get("socratic")
-                return (("Think about this…" if socratic else f"Possible misconception — {m['topic']}"),
+                return (tr(L, "think") if socratic else tr(L, "misconception", topic=m["topic"]),
                         m["hint"] if socratic else m["correction"], m["evidence"])
-            return "Please verify this figure", m["correction"], m["evidence"]
+            return tr(L, "verify"), m["correction"], m["evidence"]
         if ev.type == E.CONTRADICTION:
             o, n = m["old"], m["new"]
-            return ("Possible contradiction", f"Earlier ({o.get('ts', '?')}) \"{o['raw']}\"; now \"{n['raw']}\" for \"{m['subject']}\".",
+            return (tr(L, "contradiction"), tr(L, "contra_body", ts=o.get("ts", "?"), old=o["raw"], new=n["raw"], subj=m["subject"]),
                     [{"kind": "session_memory", "utterance_id": o.get("utt_id")}])
         if ev.type == E.QUESTION:
-            return "Suggested answer", answer["text"], answer["evidence"]
+            return tr(L, "answer_sugg"), answer["text"], answer["evidence"]
         if ev.type == E.DECISION:
-            return "Decision noted", ev.text, []
+            return tr(L, "decision"), ev.text, []
         if ev.type == E.ACTION_ITEM:
-            return ("Action item noted", f"{ev.text} (owner: {m.get('owner_stated') or 'not stated'}, deadline: {m.get('deadline_stated') or 'not stated'})", [])
+            ns = tr(L, "not_stated")
+            return tr(L, "action"), tr(L, "action_body", text=ev.text, owner=m.get("owner_stated") or ns, deadline=m.get("deadline_stated") or ns), []
         return ev.type, ev.text, []
 
     # ------------------------------------------------------------------ called-on
@@ -229,11 +231,11 @@ class Engine:
             text = next(u["text"] for u in self.db.utterances(sid) if u["id"] == qutt)
         ans = self._answer(sid, st, text, cfg, allow_llm=True)
         if ans:
-            title, body, evidence, conf = "Answer", ans["text"], ans["evidence"], ans["confidence"]
+            title, body, evidence, conf = tr(cfg.get("lang", "en"), "answer"), ans["text"], ans["evidence"], ans["confidence"]
         else:
-            title, conf, evidence = "No answer available", 0.0, []
-            body = ("I found nothing relevant in your documents and no LLM provider is configured/available. "
-                    "Add a document or enable a provider (see DEPLOYMENT.md).")
+            L = cfg.get("lang", "en")
+            title, conf, evidence = tr(L, "no_answer"), 0.0, []
+            body = tr(L, "no_answer_body")
         iv = self.db.add_intervention(sid, qutt, "USER_REQUEST", "important", "delivered", title, body, evidence, conf, 1.0,
                                       {"action": "deliver", "reasons": ["explicit_user_call"], "question_utt": qutt}, "called",
                                       int((time.time() - s["started_at"]) * 1000))
@@ -258,7 +260,7 @@ class Engine:
 
     def summary(self, sid, persist=True) -> dict:
         s = self._session(sid, need_active=False)
-        sm = build_summary(s, self.db.utterances(sid), self.db.events(sid), self.db.interventions(sid))
+        sm = build_summary(s, self.db.utterances(sid), self.db.events(sid), self.db.interventions(sid), s["settings"].get("lang", "en"))
         if persist:
             self.db.update_session(sid, summary=sm)
         return sm
