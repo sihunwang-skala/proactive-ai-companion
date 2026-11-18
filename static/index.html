@@ -148,7 +148,7 @@ ko:{ask:'AI에게 질문',start:'세션 시작',pause:'일시정지',resume:'재
  c_title:'세션 시작',c_name:'제목',c_profile:'유형',p_meeting:'회의',p_learning:'학습',p_work:'업무',c_lang:'음성 인식 언어',
  c_consent:'이 세션에서 음성이 수집·텍스트로 변환된다는 점을 이해하며, <b>녹음되는 모든 사람에게 고지했고</b> 법적으로 필요한 경우 동의를 받았습니다.',
  c_audio:'이 컴퓨터에 음성 녹음도 저장합니다 (선택).',c_note:'음성 인식은 브라우저의 Web Speech API를 사용합니다. Chrome과 Safari에서는 브라우저 제공사가 음성을 클라우드에서 처리할 수 있습니다. Companion 자체는 데이터를 로컬 SQLite 파일에 저장하며, 서버에 제공자를 설정하지 않는 한 LLM으로 아무것도 전송하지 않습니다.',cancel:'취소',c_go:'듣기 시작',
- critical:'중요(긴급)',important:'중요',suggestion:'제안',passive:'기록됨',deliver:'전달',save:'저장',dismiss:'무시',useful:'👍 도움됨',not_useful:'👎 도움 안 됨',at:'시점',conf:'신뢰도',asked:'직접 질문',unverified:'미검증, 모델 생성',
+ critical:'중요(긴급)',important:'중요',suggestion:'제안',passive:'기록됨',deliver:'전달',save:'저장',dismiss:'무시',useful:'👍 도움됨',not_useful:'👎 도움 안 됨',at:'시점',conf:'신뢰도',asked:'직접 질문',unverified:'미검증, 모델 생성',st_delivered:'전달됨',st_pending:'대기 중',st_passive:'기록됨',st_approved:'승인됨',st_dismissed:'무시됨',st_saved:'저장됨',st_active:'진행 중',st_paused:'일시정지',st_stopped:'종료됨',sk_curated_rule:'큐레이션 규칙',sk_user_document:'내 문서',sk_session_memory:'세션 기억',sk_model_generated:'모델 생성',
  feed_empty:'아직 제안할 내용이 없습니다. 주의가 필요한 순간이 올 때까지 조용히 기다립니다.',pick_session:'세션을 시작하거나 여세요.',local_note:'(추출식 요약, 로컬 생성)',
  n_dec:'결정사항',n_act:'할 일',n_unres:'미해결 질문',n_con:'모순',n_err:'오류 가능성',n_fu:'후속 조치',none:'없음',owner:'담당',deadline:'기한',not_stated:'언급 없음',exp_md:'Markdown 내보내기',exp_json:'JSON 내보내기',
  k_note:'여기에 추가한 문서는 검색, 답변, 수치 사실 확인에 사용됩니다. 클라우드 LLM 제공자를 설정하지 않으면 내 컴퓨터 밖으로 나가지 않습니다.',k_name:'이름',k_text:'내용',k_add_s:'지식에 추가 (이 세션)',k_add_g:'지식에 추가 (전체)',k_docs:'문서',k_none:'아직 없음',
@@ -158,7 +158,7 @@ ko:{ask:'AI에게 질문',start:'세션 시작',pause:'일시정지',resume:'재
  v_confirmed_error:'확인된 오류',v_needs_verification:'확인 필요',companion:'Companion',stt_err:'음성 인식 오류: ',mic_denied:' (마이크 권한이 거부됨)',listen:'듣는 중…',audio_na:'녹음을 사용할 수 없음: '}};
 let LANG='en';try{LANG=new URLSearchParams(location.search).get('lang')||localStorage.getItem('lang')||((navigator.language||'').startsWith('ko')?'ko':'en')}catch{}
 if(!I[LANG])LANG='en';
-const t=k=>I[LANG][k]??I.en[k]??k;
+const t=k=>I[LANG][k]??I.en[k]??k;const tl=(p,v)=>I[LANG][p+v]??v;
 function applyI18n(){document.documentElement.lang=LANG;
  document.querySelectorAll('[data-i18n]').forEach(e=>e.textContent=t(e.dataset.i18n));
  document.querySelectorAll('[data-i18n-html]').forEach(e=>e.innerHTML=t(e.dataset.i18nHtml));
@@ -186,12 +186,12 @@ function renderTranscript(){
   el.scrollTop=el.scrollHeight;
 }
 function card(iv){
-  const ev=(iv.evidence||[]).map(e=>`<div class="ev">${esc(e.kind)}${e.source?': '+esc(e.source):''}${e.quote?' — “'+esc(e.quote)+'”':''}${e.verified===false?' · <b>'+t('unverified')+'</b>':''}</div>`).join('');
+  const ev=(iv.evidence||[]).map(e=>`<div class="ev">${esc(tl('sk_',e.kind))}${e.source?': '+esc(e.source):''}${e.quote?' — “'+esc(e.quote)+'”':''}${e.verified===false?' · <b>'+t('unverified')+'</b>':''}</div>`).join('');
   const u=S.utts.find(x=>x.id===iv.utterance_id);
   const acts=iv.status==='pending'?`<button class="primary" data-a="approve" data-id="${iv.id}">${t('deliver')}</button><button data-a="save" data-id="${iv.id}">${t('save')}</button><button data-a="dismiss" data-id="${iv.id}">${t('dismiss')}</button>`:
     iv.status==='dismissed'?'':`<button data-f="useful" data-id="${iv.id}" ${iv.feedback==='useful'?'disabled':''}>${t('useful')}</button><button data-f="not_useful" data-id="${iv.id}" ${iv.feedback==='not_useful'?'disabled':''}>${t('not_useful')}</button>${iv.status!=='saved'?`<button data-a="save" data-id="${iv.id}">${t('save')}</button>`:''}`;
   return `<article class="card ${iv.priority} ${iv.status}"><h3><span class="badge">${t(iv.priority)}</span>${esc(iv.title)}</h3><p>${esc(iv.body)}</p>${ev}
-  <div class="meta">${u?`${t('at')} ${mmss(u.ts_ms)} · `:''}${t('conf')} ${Math.round((iv.confidence||0)*100)}% · ${esc(iv.status)}${iv.trigger==='called'?' · '+t('asked'):''}</div><div class="act">${acts}</div></article>`;
+  <div class="meta">${u?`${t('at')} ${mmss(u.ts_ms)} · `:''}${t('conf')} ${Math.round((iv.confidence||0)*100)}% · ${esc(tl('st_',iv.status))}${iv.trigger==='called'?' · '+t('asked'):''}</div><div class="act">${acts}</div></article>`;
 }
 async function renderPane(){
   const p=$('#pane');document.querySelectorAll('#tabs button').forEach(b=>b.setAttribute('aria-selected',b.dataset.tab===S.tab));
@@ -220,7 +220,7 @@ async function renderPane(){
   }else if(S.tab==='history'){
     p.innerHTML=`<input type="text" id="hq" placeholder="${t('h_search')}" aria-label="Search"><div id="hl" style="margin-top:10px"></div>`;
     const load=async()=>{const l=await api('/sessions'+($('#hq').value?`?q=${encodeURIComponent($('#hq').value)}`:''));
-      $('#hl').innerHTML=l.length?l.map(s=>`<div class="card passive"><h3>${esc(s.title)}</h3><div class="meta">${new Date(s.started_at*1000).toLocaleString()} · ${s.profile} · ${s.status}</div>
+      $('#hl').innerHTML=l.length?l.map(s=>`<div class="card passive"><h3>${esc(s.title)}</h3><div class="meta">${new Date(s.started_at*1000).toLocaleString()} · ${s.profile} · ${tl('st_',s.status)}</div>
       <div class="act"><button data-open="${s.id}">${t('open')}</button><button data-del="${s.id}" class="danger">${t('del')}</button></div></div>`).join(''):'<div class="empty">'+t('h_none')+'</div>'};
     $('#hq').oninput=load;load();
   }else if(S.tab==='cost'){
