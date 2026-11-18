@@ -1,9 +1,31 @@
-# Proactive AI Companion (working name — trademark check pending)
+# Hushcue
 
-
-An always-on (per explicit session) companion that listens during meetings, study or work and **helps before you ask**: it detects questions, misconceptions and contradictions, and surfaces them as Hold cards, on-demand answers, or live interjections — under policy gates you control.
+**Listens live. Speaks up when it matters.**
 
 **English** | [한국어](README.ko.md)
+
+## What is Hushcue?
+Hushcue is a live AI companion for **meetings, study and work**. You switch it on for a session and it listens (only after you consent). While people talk, it quietly watches for things worth flagging:
+
+- a **wrong claim** (e.g. "Random Forest trains its trees one after another"),
+- a number that **contradicts** what was said earlier ("budget is 50M" → "budget is 80M"),
+- a **question** nobody answered,
+- a **decision** or an **action item** that was just made (with owner and deadline only if someone actually said them).
+
+Then it decides **how loudly** to tell you. You choose the mode:
+
+| Mode | Behaviour | Good for |
+|---|---|---|
+| **Hold** (default) | Never interrupts. Saves quiet cards that you approve, save or dismiss. | Meetings, lectures |
+| **Called On** | Answers only when you ask it. | Focused work |
+| **Interject** | Speaks up live, but only if every policy gate passes (importance, confidence, cooldown, max interruptions, do-not-disturb, not while you are talking). A blocked interjection becomes a card instead. | When a mistake would be costly |
+
+Every decision is logged, so you can see *why* Hushcue spoke or stayed quiet. At the end you get notes with decisions, action items and open questions, each linked to a timestamp.
+
+**Privacy by default:** data stays in a local SQLite file; nothing goes to an LLM unless you configure a provider; sessions need explicit consent; you can delete a session at any time.
+
+*Name: a web search found no product with the exact name "Hushcue"; formal trademark clearance has not been done.*
+
 
 ![Live suggestions (English UI)](docs/img/en-feed.png)
 ![Session notes (English UI)](docs/img/en-notes.png)

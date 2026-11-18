@@ -62,7 +62,7 @@ def create_app(data_dir: str | None = None, provider: Provider | None = None) ->
     if days > 0:
         storage.purge_older_than(days)
     engine = Engine(storage, provider or provider_from_env())
-    app = FastAPI(title="Proactive AI Companion", version="0.1.0")
+    app = FastAPI(title="Hushcue", version="0.1.0")
     app.state.engine = engine
 
     @app.exception_handler(SessionError)

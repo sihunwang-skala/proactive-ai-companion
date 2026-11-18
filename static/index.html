@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Proactive AI Companion</title>
+<title>Hushcue</title>
 <style>
 :root{--bg:#f6f7f9;--surface:#fff;--surface2:#f0f2f5;--text:#14181f;--muted:#5d6675;--line:#e2e6ec;--accent:#3b5bdb;--accent-ink:#fff;
 --crit:#c92a2a;--crit-bg:#fff0f0;--imp:#d9480f;--imp-bg:#fff4ec;--sug:#1971c2;--sug-bg:#edf5ff;--pas:#6b7280;--pas-bg:#f1f3f5;--ok:#2b8a3e;
@@ -63,7 +63,7 @@ ul.clean{margin:4px 0 12px;padding-left:18px}h4{margin:14px 0 2px;font-size:13px
 <body>
 <div class="app">
 <header>
-  <h1>Proactive AI Companion</h1>
+  <h1>Hushcue</h1>
   <span class="rec" id="rec" role="status" aria-live="polite"><span class="dot"></span><span id="recText">Not listening</span></span>
   <div class="seg" role="group" aria-label="Intervention mode" id="modes">
     <button data-mode="hold" aria-pressed="true" data-i18n="m_hold" data-i18n-title="m_hold_t">Hold</button>
@@ -132,7 +132,7 @@ const I={en:{ask:'Ask AI',start:'Start session',pause:'Pause',resume:'Resume',st
  idle:'Not listening',listening:'Listening — session active',paused:'Paused',stt_na:'Browser STT unavailable — typed input only',
  c_title:'Start a session',c_name:'Title',c_profile:'Profile',p_meeting:'Meeting',p_learning:'Learning',p_work:'Work',c_lang:'Speech language',
  c_consent:'I understand this session will capture and transcribe speech, and that <b>everyone being recorded has been informed</b> and, where the law requires, has consented.',
- c_audio:'Also save an audio recording on this computer (optional).',c_note:"Speech-to-text uses your browser's Web Speech API. In Chrome and Safari the browser vendor may process audio in the cloud. Companion itself keeps data in a local SQLite file and sends nothing to any LLM unless you configured a provider on the server.",cancel:'Cancel',c_go:'Start listening',
+ c_audio:'Also save an audio recording on this computer (optional).',c_note:"Speech-to-text uses your browser's Web Speech API. In Chrome and Safari the browser vendor may process audio in the cloud. Hushcue itself keeps data in a local SQLite file and sends nothing to any LLM unless you configured a provider on the server.",cancel:'Cancel',c_go:'Start listening',
  critical:'Critical',important:'Important',suggestion:'Suggestion',passive:'Noted',deliver:'Deliver',save:'Save',dismiss:'Dismiss',useful:'👍 Useful',not_useful:'👎 Not useful',at:'at',conf:'confidence',asked:'you asked',unverified:'unverified, model-generated',
  feed_empty:'Nothing to suggest yet. The companion stays quiet until something is worth your attention.',pick_session:'Start or open a session.',local_note:'(extractive, generated locally)',
  n_dec:'Decisions',n_act:'Action items',n_unres:'Unresolved questions',n_con:'Contradictions',n_err:'Possible errors',n_fu:'Follow-ups',none:'None',owner:'owner',deadline:'deadline',not_stated:'not stated',exp_md:'Export Markdown',exp_json:'Export JSON',
@@ -140,14 +140,14 @@ const I={en:{ask:'Ask AI',start:'Start session',pause:'Pause',resume:'Resume',st
  h_search:'Search sessions and transcripts…',open:'Open',del:'Delete',h_none:'No sessions',h_confirm:'Permanently delete this session, transcript and audio?',
  co_proc:'Processing',co_calls:'Cloud LLM calls',co_tok:'Tokens in / out',co_cost:'LLM cost (estimate)',co_stt:'STT cost',co_local:'Local events',co_lat:'Server latency p50 / p95',co_dis:'Dismissed',co_fb:'Useful / not useful',browser:'$0 (browser)',
  s_start:'Start a session to edit its settings.',s_inter:'Interject score threshold',s_conf:'Confidence threshold',s_cool:'Cooldown (s)',s_max:'Max interruptions',s_dnd:'Do not disturb (cards only, never interject)',s_soc:'Socratic mode (hints instead of answers)',s_voice:'Speak delivered suggestions aloud (OS text-to-speech)',s_apply:'Apply',s_short:'Shortcuts: Ctrl/⌘+K ask AI · Ctrl/⌘+Enter send · Ctrl/⌘+P pause.',s_ok:'Settings applied',
- v_confirmed_error:'confirmed error',v_needs_verification:'needs verification',companion:'Companion',stt_err:'STT error: ',mic_denied:' (microphone permission denied)',listen:'Listening…',audio_na:'Audio recording unavailable: '},
+ v_confirmed_error:'confirmed error',v_needs_verification:'needs verification',companion:'Hushcue',stt_err:'STT error: ',mic_denied:' (microphone permission denied)',listen:'Listening…',audio_na:'Audio recording unavailable: '},
 ko:{ask:'AI에게 질문',start:'세션 시작',pause:'일시정지',resume:'재개',stop:'종료',m_hold:'보류',m_hold_t:'AI가 제안을 준비하고 사용자가 승인합니다',m_called:'호출 시',m_called_t:'호출할 때만 AI가 답합니다 (Ctrl/⌘+K)',m_inter:'능동 개입',m_inter_t:'확신이 높고 가치가 있을 때 AI가 먼저 끼어듭니다',
  transcript:'실시간 대화 기록',empty_tr:'세션을 시작한 뒤 말하거나(브라우저 음성 인식) 아래에 입력하세요.',no_utt:'아직 발화가 없습니다.',speaker:'화자',utt_ph:'발화를 입력하세요 (음성 대신 입력)…',send:'보내기',mic:'🎙 마이크',mic_on:'⏹ 마이크 켜짐',
  tab_feed:'제안',tab_notes:'노트',tab_evidence:'지식',tab_history:'기록',tab_cost:'비용',tab_settings:'설정',
  idle:'듣지 않는 중',listening:'듣는 중 — 세션 진행',paused:'일시정지',stt_na:'브라우저 음성 인식을 사용할 수 없어 텍스트 입력만 가능합니다',
  c_title:'세션 시작',c_name:'제목',c_profile:'유형',p_meeting:'회의',p_learning:'학습',p_work:'업무',c_lang:'음성 인식 언어',
  c_consent:'이 세션에서 음성이 수집·텍스트로 변환된다는 점을 이해하며, <b>녹음되는 모든 사람에게 고지했고</b> 법적으로 필요한 경우 동의를 받았습니다.',
- c_audio:'이 컴퓨터에 음성 녹음도 저장합니다 (선택).',c_note:'음성 인식은 브라우저의 Web Speech API를 사용합니다. Chrome과 Safari에서는 브라우저 제공사가 음성을 클라우드에서 처리할 수 있습니다. Companion 자체는 데이터를 로컬 SQLite 파일에 저장하며, 서버에 제공자를 설정하지 않는 한 LLM으로 아무것도 전송하지 않습니다.',cancel:'취소',c_go:'듣기 시작',
+ c_audio:'이 컴퓨터에 음성 녹음도 저장합니다 (선택).',c_note:'음성 인식은 브라우저의 Web Speech API를 사용합니다. Chrome과 Safari에서는 브라우저 제공사가 음성을 클라우드에서 처리할 수 있습니다. Hushcue 자체는 데이터를 로컬 SQLite 파일에 저장하며, 서버에 제공자를 설정하지 않는 한 LLM으로 아무것도 전송하지 않습니다.',cancel:'취소',c_go:'듣기 시작',
  critical:'중요(긴급)',important:'중요',suggestion:'제안',passive:'기록됨',deliver:'전달',save:'저장',dismiss:'무시',useful:'👍 도움됨',not_useful:'👎 도움 안 됨',at:'시점',conf:'신뢰도',asked:'직접 질문',unverified:'미검증, 모델 생성',st_delivered:'전달됨',st_pending:'대기 중',st_passive:'기록됨',st_approved:'승인됨',st_dismissed:'무시됨',st_saved:'저장됨',st_active:'진행 중',st_paused:'일시정지',st_stopped:'종료됨',sk_curated_rule:'큐레이션 규칙',sk_user_document:'내 문서',sk_session_memory:'세션 기억',sk_model_generated:'모델 생성',
  feed_empty:'아직 제안할 내용이 없습니다. 주의가 필요한 순간이 올 때까지 조용히 기다립니다.',pick_session:'세션을 시작하거나 여세요.',local_note:'(추출식 요약, 로컬 생성)',
  n_dec:'결정사항',n_act:'할 일',n_unres:'미해결 질문',n_con:'모순',n_err:'오류 가능성',n_fu:'후속 조치',none:'없음',owner:'담당',deadline:'기한',not_stated:'언급 없음',exp_md:'Markdown 내보내기',exp_json:'JSON 내보내기',
@@ -155,7 +155,7 @@ ko:{ask:'AI에게 질문',start:'세션 시작',pause:'일시정지',resume:'재
  h_search:'세션과 대화 기록 검색…',open:'열기',del:'삭제',h_none:'세션 없음',h_confirm:'이 세션과 대화 기록, 녹음을 영구 삭제할까요?',
  co_proc:'처리 방식',co_calls:'클라우드 LLM 호출',co_tok:'토큰 입력 / 출력',co_cost:'LLM 비용 (추정)',co_stt:'음성 인식 비용',co_local:'로컬 이벤트',co_lat:'서버 지연 p50 / p95',co_dis:'무시함',co_fb:'도움됨 / 도움 안 됨',browser:'$0 (브라우저)',
  s_start:'세션을 시작하면 설정을 바꿀 수 있습니다.',s_inter:'개입 점수 임계값',s_conf:'신뢰도 임계값',s_cool:'쿨다운(초)',s_max:'최대 개입 횟수',s_dnd:'방해 금지 (카드만 표시, 끼어들지 않음)',s_soc:'소크라테스 모드 (정답 대신 힌트)',s_voice:'전달된 제안을 음성으로 읽기 (OS 음성 합성)',s_apply:'적용',s_short:'단축키: Ctrl/⌘+K AI 질문 · Ctrl/⌘+Enter 보내기 · Ctrl/⌘+P 일시정지',s_ok:'설정을 적용했습니다',
- v_confirmed_error:'확인된 오류',v_needs_verification:'확인 필요',companion:'Companion',stt_err:'음성 인식 오류: ',mic_denied:' (마이크 권한이 거부됨)',listen:'듣는 중…',audio_na:'녹음을 사용할 수 없음: '}};
+ v_confirmed_error:'확인된 오류',v_needs_verification:'확인 필요',companion:'Hushcue',stt_err:'음성 인식 오류: ',mic_denied:' (마이크 권한이 거부됨)',listen:'듣는 중…',audio_na:'녹음을 사용할 수 없음: '}};
 let LANG='en';try{LANG=new URLSearchParams(location.search).get('lang')||localStorage.getItem('lang')||((navigator.language||'').startsWith('ko')?'ko':'en')}catch{}
 if(!I[LANG])LANG='en';
 const t=k=>I[LANG][k]??I.en[k]??k;const tl=(p,v)=>I[LANG][p+v]??v;
